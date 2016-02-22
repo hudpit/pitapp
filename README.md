@@ -13,6 +13,8 @@ For the department of Housing and Urban Development
 
 Point In Time is an HTML5 based application.  The app can be deployed on a web server or can be packaged with PhoneGap or Cordova, once packaged it can be deployed to the Apple app store, Google Play and other mobile application providers.
 
+For the full documentation, please click [here](http://hudpit.github.io/pitapp/docs/#!/guide)
+
 ## Web Installation
 
 Developing a Sencha Touch application is similar to developing a website.  There is no restriction about the web hosting service to use.
@@ -58,7 +60,7 @@ The Point In Time application was designed to be natively packaged using PhoneGa
 
 Look in the 'phonegap' folder for an example config.xml. Here you will have to set your application name, id and specify resource specific information about items to include like icons and splash screens.   Images for icons and splash screens have also been provided in the res folder.
 
-Please read about native build requirements in the guide: [Development Environment and Dependencies](#!/guide/development_environment_and_dependencies) guide.
+Please read about native build requirements in the guide: [Development Environment and Dependencies](http://hudpit.github.io/pitapp/docs/#!/guide/development_environment_and_dependencies) guide.
 
 You can learn about the config.xml file in the Phonegap documentation: [http://docs.build.phonegap.com/en_US/configuring_basics.md.html#The%20Basics](http://docs.build.phonegap.com/en_US/configuring_basics.md.html#The%20Basics "Configuring The Basics")
 
