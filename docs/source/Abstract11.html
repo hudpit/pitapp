@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-globalization-Abstract'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.globalization.Abstract', {
+    mixins: ['Ext.mixin.Observable'],
+
+    config: {
+<span id='Ext-device-globalization-Abstract-cfg-formatLength'>        formatLength: 'full',
+</span><span id='Ext-device-globalization-Abstract-cfg-selector'>        selector: 'date and time',
+</span><span id='Ext-device-globalization-Abstract-cfg-dateType'>        dateType: 'wide',
+</span><span id='Ext-device-globalization-Abstract-cfg-items'>        items: 'months',
+</span><span id='Ext-device-globalization-Abstract-cfg-numberType'>        numberType: 'decimal',
+</span><span id='Ext-device-globalization-Abstract-cfg-currencyCode'>        currencyCode: &quot;USD&quot;
+</span>    },
+
+<span id='Ext-device-globalization-Abstract-method-getPreferredLanguage'>    getPreferredLanguage: function(config) {
+</span>        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getPreferredLanguage');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getLocaleName'>    getLocaleName: function(config) {
+</span>        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getLocaleName');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-dateToString'>    dateToString: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            date: new Date(),
+            formatLength: defaultConfig.formatLength,
+            selector: defaultConfig.selector
+        });
+
+        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #dateToString');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-stringToDate'>    stringToDate: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            dateString: Ext.util.Format.date(new Date(), 'm/d/Y'),
+            formatLength: defaultConfig.formatLength,
+            selector: defaultConfig.selector
+        });
+
+        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #stringToDate');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getDatePattern'>    getDatePattern: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            formatLength: defaultConfig.formatLength,
+            selector: defaultConfig.selector
+        });
+
+        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getDatePattern');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getDateNames'>    getDateNames: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            type: defaultConfig.dateType,
+            items: defaultConfig.items
+        });
+
+        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getDateNames');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-isDayLightSavingsTime'>    isDayLightSavingsTime: function(config) {
+</span>        config = Ext.applyIf(config, {
+            date: new Date()
+        });
+
+        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #isDayLightSavingsTime');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getFirstDayOfWeek'>    getFirstDayOfWeek: function(config) {
+</span>        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getFirstDayOfWeek');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-numberToString'>    numberToString: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            number: defaultConfig.number,
+            type: defaultConfig.numberType
+        });
+
+        // &lt;debug&gt;
+        if (!config.number) {
+            Ext.Logger.warn('You need to specify a `number` for #numberToString');
+        }
+
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #numberToString');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-stringToNumber'>    stringToNumber: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            type: defaultConfig.numberType
+        });
+
+        // &lt;debug&gt;
+        if (!config.number) {
+            Ext.Logger.warn('You need to specify a `string` for #stringToNumber');
+        }
+
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #stringToNumber');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getNumberPattern'>    getNumberPattern: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            type: defaultConfig.numberType
+        });
+
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getNumberPattern');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+<span id='Ext-device-globalization-Abstract-method-getCurrencyPattern'>    getCurrencyPattern: function(config) {
+</span>        var defaultConfig = Ext.device.globalization.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            currencyCode: defaultConfig.currencyCode
+        });
+
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getCurrency');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    }
+});
+</pre>
+</body>
+</html>

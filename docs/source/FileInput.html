@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-field-FileInput'>/**
+</span> * @private
+ */
+Ext.define('Ext.field.FileInput', {
+    extend: 'Ext.field.Input',
+    xtype: 'fileinput',
+
+<span id='Ext-field-FileInput-event-change'>    /**
+</span>     * @event change
+     * Fires just before the field blurs if the field value has changed
+     * @param {Ext.field.Text} this This field
+     * @param {Mixed} newValue The new value
+     * @param {Mixed} oldValue The original value
+     */
+
+    config: {
+<span id='Ext-field-FileInput-cfg-type'>        type: &quot;file&quot;,
+</span><span id='Ext-field-FileInput-cfg-accept'>        accept: null,
+</span><span id='Ext-field-FileInput-cfg-capture'>        capture: null,
+</span><span id='Ext-field-FileInput-cfg-name'>        name: null,
+</span><span id='Ext-field-FileInput-cfg-multiple'>        multiple: false
+</span>    },
+
+<span id='Ext-field-FileInput-property-Lookup'>    /**
+</span>     * @property {Object} Lookup of capture devices to accept types
+     * @private
+     */
+    captureLookup: {
+        video: &quot;camcorder&quot;,
+        image: &quot;camera&quot;,
+        audio: &quot;microphone&quot;
+    },
+
+<span id='Ext-field-FileInput-method-initialize'>    // @private
+</span>    initialize: function() {
+        var me = this;
+
+        me.callParent();
+
+        me.input.on({
+            scope: me,
+            change: 'onInputChange'
+        });
+    },
+
+<span id='Ext-field-FileInput-method-getValue'>    /**
+</span>     * Returns the field data value.
+     * @return {String} value The field value.
+     */
+    getValue: function() {
+        var input = this.input;
+
+        if (input) {
+            this._value = input.dom.value;
+        }
+
+        return this._value;
+    },
+
+<span id='Ext-field-FileInput-cfg-newValue'>    /**
+</span>     * Sets the internal value. Security restrictions prevent setting file values on the input element
+     * @cfg newValue {string} New Value
+     * @returns {String}
+     */
+    setValue: function(newValue) {
+        var oldValue = this._value;
+        this._value = newValue;
+
+        if (String(this._value) != String(oldValue) &amp;&amp; this.initialized) {
+            this.onChange(this, this._value, oldValue);
+        }
+
+        return this;
+    },
+
+<span id='Ext-field-FileInput-method-getFiles'>    /**
+</span>     * Returns the field files.
+     * @return {FileList} List of the files selected.
+     */
+    getFiles: function() {
+        var input = this.input;
+
+        if (input) {
+            this.$files = input.dom.files;
+        }
+
+        return this.$files;
+    },
+
+<span id='Ext-field-FileInput-method-onInputChange'>    // @private
+</span>    onInputChange: function(e) {
+        this.setValue(e.target.value);
+    },
+
+<span id='Ext-field-FileInput-cfg-me'>    /**
+</span>     * Called when the value changes on this input item
+     * @cfg me {Ext.field.FileInput}
+     * @cfg value {String} new Value
+     * @cfg startValue {String} Original Value
+     */
+    onChange: function(me, value, startValue) {
+        this.fireEvent('change', me, value, startValue);
+    },
+
+<span id='Ext-field-FileInput-cfg-value'>    /**
+</span>     * Called when the name being changed
+     * @cfg value   new value
+     * @returns {*}
+     */
+    applyName: function(value) {
+        if(this.getMultiple() &amp;&amp; value.substr(-2, 2) !== &quot;[]&quot;) {
+            value += &quot;[]&quot;;
+        }else if((!this.getMultiple()) &amp;&amp; value.substr(-2, 2) === &quot;[]&quot;) {
+            value = value.substr(0, value.length-2)
+        }
+
+        return value;
+    },
+
+<span id='Ext-field-FileInput-cfg-value'>    /**
+</span>     * Applies the multiple attribute to the input
+     * @cfg value {boolean}
+     * @returns {boolean}
+     */
+    applyMultiple: function(value) {
+        this.updateFieldAttribute('multiple', value ? '' : null);
+        return value;
+    },
+
+<span id='Ext-field-FileInput-method-updateMultiple'>    /**
+</span>     * Called when the multiple property is updated. The name will automatically be toggled to an array if needed.
+     */
+    updateMultiple: function() {
+        var name = this.getName();
+        if(!Ext.isEmpty(name)) {
+            this.setName(name);
+        }
+    },
+
+<span id='Ext-field-FileInput-method-applyAccept'>    /*
+</span>     * Updates the accept attribute with the {@link #accept} configuration.
+     * 
+     */
+    applyAccept: function(value) {
+        switch (value) {
+            case &quot;video&quot;:
+            case &quot;audio&quot;:
+            case &quot;image&quot;:
+                value = value + &quot;/*&quot;;
+                break;
+        }
+
+        this.updateFieldAttribute('accept', value);
+    },
+
+<span id='Ext-field-FileInput-method-applyCapture'>    /**
+</span>     * Updated the capture attribute with the {@ink capture} configuration
+     */
+    applyCapture: function(value) {
+        this.updateFieldAttribute('capture', value);
+        return value;
+    }
+});
+</pre>
+</body>
+</html>

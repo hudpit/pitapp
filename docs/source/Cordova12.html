@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-media-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.media.Cordova', {
+    alternateClassName: 'Ext.device.media.PhoneGap',
+    extend: 'Ext.device.media.Abstract',
+
+    config: {
+<span id='Ext-device-media-Cordova-property-src'>        /**
+</span>         * A URI containing the audio content. 
+         * @type {String}
+         */
+        src: null,
+
+<span id='Ext-device-media-Cordova-cfg-media'>        /**
+</span>         * @private
+         */
+        media: null
+    },
+
+<span id='Ext-device-media-Cordova-method-updateSrc'>    updateSrc: function(newSrc, oldSrc) {
+</span>        this.setMedia(new Media(newSrc));
+    },
+
+<span id='Ext-device-media-Cordova-method-play'>    play: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.play();
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-pause'>    pause: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.pause();
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-stop'>    stop: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.stop();
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-release'>    release: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.release();
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-seekTo'>    seekTo: function(miliseconds) {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.seekTo(miliseconds);
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-getDuration'>    getDuration: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.getDuration();
+        }
+    },
+
+<span id='Ext-device-media-Cordova-method-startRecord'>    startRecord: function() {
+</span>        var media = this.getMedia();
+
+        if (!media) {
+            this.setSrc(null);
+        }
+
+        media.startRecord();
+    },
+
+<span id='Ext-device-media-Cordova-method-stopRecord'>    stopRecord: function() {
+</span>        var media = this.getMedia();
+        if (media) {
+            media.stopRecord();
+        }
+    }
+});
+</pre>
+</body>
+</html>

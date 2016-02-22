@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">Ext.define('Ext.ux.parse.association.Pointer', {
+    extend: 'Ext.data.association.Association',
+    alias: 'association.pointer',
+
+    config: {
+        include: false
+    },
+
+    applyAssociationKey: function(associationKey) {
+        if (!associationKey) {
+            var associatedName = this.getAssociatedName();
+            associationKey = associatedName.toLowerCase();
+        }
+        return associationKey;
+    },
+
+    getData: function(model){
+        var pointerModel = model.get(this.getName());
+        if(pointerModel &amp;&amp; pointerModel.isModel){
+            return pointerModel.data;
+        }
+
+        return null;
+    },
+
+    read: function(record, reader, associationData) {
+        var newRecord = reader.read([associationData]).getRecords()[0];
+
+        newRecord.boundTo = record;
+        newRecord.on(&quot;dirty&quot;, this.onDirty);
+
+        record.on(&quot;fieldupdate&quot;, this.onFieldUpdate, this);
+        record.set(this.getName(), newRecord);
+    },
+
+    onFieldUpdate: function(model, newValue, fieldName){
+        if(fieldName == this.getName()){
+            model.un(&quot;dirty&quot;, this.onDirty);
+            newValue.boundTo = model;
+            model.setDirty();
+        }
+    },
+
+    onDirty: function(model){
+        if(model.boundTo) {
+            var record = model.boundTo;
+            record.setDirty();
+        }
+    }
+});</pre>
+</body>
+</html>

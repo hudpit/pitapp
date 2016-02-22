@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-globalization-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.globalization.Cordova', {
+    alternateClassName: 'Ext.device.globalization.PhoneGap',
+
+    extend: 'Ext.device.globalization.Abstract',
+
+<span id='Ext-device-globalization-Cordova-method-getPreferredLanguage'>    getPreferredLanguage: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getPreferredLanguage(config.success, config.error);
+    },
+<span id='Ext-device-globalization-Cordova-method-getLocaleName'>    getLocaleName: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getLocaleName(config.success, config.error);
+    },
+<span id='Ext-device-globalization-Cordova-method-dateToString'>    dateToString: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.dateToString(config.date, config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-stringToDate'>    stringToDate:function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.stringToDate(config.dateString, config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-getDatePattern'>    getDatePattern: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getDatePattern(config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-getDateNames'>    getDateNames: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getDateNames(config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-isDayLightSavingsTime'>    isDayLightSavingsTime: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.isDayLightSavingsTime(config.date, config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-getFirstDayOfWeek'>    getFirstDayOfWeek:function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getFirstDayOfWeek(config.success, config.error);
+    },
+<span id='Ext-device-globalization-Cordova-method-numberToString'>    numberToString: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.numberToString(config.number, config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-stringToNumber'>    stringToNumber: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.stringToNumber(config.string, config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-getNumberPattern'>    getNumberPattern: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getNumberPattern(config.success, config.error, config);
+    },
+<span id='Ext-device-globalization-Cordova-method-getCurrencyPattern'>    getCurrencyPattern: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.globalization.getCurrencyPattern(config.currencyCode, config.success, config.error);
+    }
+});
+</pre>
+</body>
+</html>

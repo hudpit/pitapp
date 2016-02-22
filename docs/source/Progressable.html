@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-mixin-Progressable'>/**
+</span> * A Traversable mixin.
+ * @private
+ */
+Ext.define('Ext.mixin.Progressable', {
+    extend: 'Ext.mixin.Mixin',
+<span id='Ext-mixin-Progressable-property-isProgressable'>    isProgressable: true,
+</span>
+<span id='Ext-mixin-Progressable-property-mixinConfig'>    mixinConfig: {
+</span>        id: 'progressable'
+    },
+
+    config: {
+
+<span id='Ext-mixin-Progressable-cfg-minProgressInput'>        /**
+</span>         * @cfg {Number} minProgressInput
+         * Minimum input value for this indicator
+         */
+        minProgressInput: 0,
+
+<span id='Ext-mixin-Progressable-cfg-maxProgressInput'>        /**
+</span>         * @cfg {Number} maxProgressInput
+         * Maximum input value for this indicator
+         */
+        maxProgressInput: 1,
+
+<span id='Ext-mixin-Progressable-cfg-minProgressOutput'>        /**
+</span>         * @cfg {Number} minProgressOutput
+         * Minimum output value for this indicator
+         */
+        minProgressOutput: 0,
+
+<span id='Ext-mixin-Progressable-cfg-maxProgressOutput'>        /**
+</span>         * @cfg {Number} maxProgressOutput
+         * Maximum output value for this indicator
+         */
+        maxProgressOutput: 100,
+
+<span id='Ext-mixin-Progressable-cfg-dynamic'>        /**
+</span>         * @cfg {Boolean} dynamic
+         *
+         * When false this indicator will only receive progressStart and progressEnd commands, no progressUpdate commands will be sent.
+         *
+         */
+        dynamic: true,
+
+<span id='Ext-mixin-Progressable-cfg-state'>        /**
+</span>         * @cfg {String} state
+         *
+         * Current state of the progressIndicator. Should be used for switching progress states like download to upload.
+         */
+        state: null
+    },
+
+<span id='Ext-mixin-Progressable-property-_progressActive'>    // @private
+</span>    _progressActive: false,
+<span id='Ext-mixin-Progressable-property-_progress'>    _progress: 0,
+</span><span id='Ext-mixin-Progressable-property-_rawProgress'>    _rawProgress: 0,
+</span>
+<span id='Ext-mixin-Progressable-method-onStartProgress'>    onStartProgress: Ext.emptyFn,
+</span><span id='Ext-mixin-Progressable-method-onUpdateProgress'>    onUpdateProgress: Ext.emptyFn,
+</span><span id='Ext-mixin-Progressable-method-onEndProgress'>    onEndProgress: Ext.emptyFn,
+</span>
+<span id='Ext-mixin-Progressable-method-startProgress'>    startProgress: function() {
+</span>        if (!this._progressActive) {
+            this._progressActive = true;
+            this.onStartProgress();
+            this.updateProgress(this.getMinProgressInput());
+        }
+    },
+
+<span id='Ext-mixin-Progressable-method-updateProgress'>    updateProgress: function(value, state) {
+</span>        if(state &amp;&amp; state != this.getState()) this.setState(state);
+        if(value &gt; this.getMaxProgressInput()) value = this.getMaxProgressInput();
+        if(value &lt; this.getMinProgressInput()) value = this.getMinProgressInput();
+
+        var mappedValue = this.mapValues(value, this.getMinProgressInput(), this.getMaxProgressInput(), this.getMinProgressOutput(), this.getMaxProgressOutput());
+        this._progress = mappedValue;
+        this._rawProgress = value;
+
+        if(this.getDynamic()) {
+            this.onUpdateProgress(mappedValue);
+        }
+    },
+
+<span id='Ext-mixin-Progressable-method-endProgress'>    endProgress: function() {
+</span>        if (this._progressActive) {
+            this._progressActive = false;
+            this.updateProgress(this.getMaxProgressInput());
+            this.onEndProgress()
+        }
+    },
+
+<span id='Ext-mixin-Progressable-method-mapValues'>    mapValues: function(value, inputMin, inputMax, outputMin, outputMax) {
+</span>        return (value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin;
+    },
+
+<span id='Ext-mixin-Progressable-method-setProgress'>    setProgress: function(value) {
+</span>        this.updateProgress(value);
+    },
+
+<span id='Ext-mixin-Progressable-method-getProgress'>    getProgress: function() {
+</span>        return this._progress
+    },
+
+<span id='Ext-mixin-Progressable-method-getRawProgress'>    getRawProgress: function() {
+</span>        return this._rawProgress;
+    }
+});
+</pre>
+</body>
+</html>

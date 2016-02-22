@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-event-recognizer-Tap'>/**
+</span> * A simple event recogniser which knows when you tap.
+ *
+ * @private
+ */
+Ext.define('Ext.event.recognizer.Tap', {
+    extend: 'Ext.event.recognizer.SingleTouch',
+
+<span id='Ext-event-recognizer-Tap-property-handledEvents'>    handledEvents: ['tap', 'tapcancel'],
+</span>
+    config: {
+<span id='Ext-event-recognizer-Tap-cfg-moveDistance'>        /**
+</span>         * @cfg {Number} moveDistance
+         * The maximimum distance in pixels a touchstart event can travel and still be considered a tap event.
+         */
+
+        moveDistance: 8
+    },
+
+<span id='Ext-event-recognizer-Tap-method-onTouchStart'>    onTouchStart: function(e) {
+</span>        if (this.callSuper(arguments) === false) {
+            return false;
+        }
+
+        this.startPoint = e.changedTouches[0].point;
+    },
+
+<span id='Ext-event-recognizer-Tap-method-onTouchMove'>    onTouchMove: function(e) {
+</span>        var touch = e.changedTouches[0],
+            point = touch.point;
+
+        if (Math.abs(point.getDistanceTo(this.startPoint)) &gt;= this.getMoveDistance()) {
+            this.fire('tapcancel', e, [touch], {
+                touch: touch
+            });
+            return this.fail(this.self.TOUCH_MOVED);
+        }
+    },
+
+<span id='Ext-event-recognizer-Tap-method-onTouchEnd'>    onTouchEnd: function(e) {
+</span>        var touch = e.changedTouches[0];
+
+        this.fire('tap', e, [touch], {
+            touch: touch
+        });
+    }
+});</pre>
+</body>
+</html>

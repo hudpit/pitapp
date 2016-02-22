@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-dataview-component-ListItem'>/**
+</span> * A ListItem is a container for {@link Ext.dataview.List} with 
+ * useSimpleItems: false. 
+ * 
+ * ListItem configures and updates the {@link Ext.data.Model records} for  
+ * the sub-component items in a list. 
+ *   
+ * Overwrite the `updateRecord()` method to set a sub-component's value. 
+ * Sencha Touch calls `updateRecord()` whenever the data in the list updates.
+ *
+ * The `updatedata` event fires after `updateRecord()` runs.
+ *
+ * *Note*: Use of ListItem increases overhead since it generates more markup than
+ * using the List class with useSimpleItems: true. This overhead is more
+ * noticeable in Internet Explorer. If at all possible, use
+ * {@link Ext.dataview.component.SimpleListItem} instead.
+ * 
+ * The following example shows how to configure and update sub-component items
+ * in a list:
+ *
+ *     Ext.define('Twitter.view.TweetListItem', {
+ *         extend: 'Ext.dataview.component.ListItem',
+ *         xtype : 'tweetlistitem',
+ *         requires: [
+ *             'Ext.Img'
+ *         ],
+ *         config: {
+ *             userName: {
+ *                 cls: 'username'
+ *             },
+ *             text: {
+ *                 cls: 'text'
+ *             },
+ *             avatar: {
+ *                 docked: 'left',
+ *                 xtype : 'image',
+ *                 cls   : 'avatar',
+ *                 width: '48px',
+ *                 height: '48px'
+ *             },
+ *             layout: {
+ *                 type: 'vbox'
+ *             }
+ *         },
+ *     
+ *         applyUserName: function(config) {
+ *             return Ext.factory(config, Ext.Component, this.getUserName());
+ *         },
+ *     
+ *         updateUserName: function(newUserName) {
+ *             if (newUserName) {
+ *                 this.insert(0, newUserName);
+ *             }
+ *         },
+ *     
+ *         applyText: function(config) {
+ *             return Ext.factory(config, Twitter.view.TweetListItemText, this.getText());
+ *         },
+ *     
+ *         updateText: function(newText) {
+ *             if (newText) {
+ *                 this.add(newText);
+ *             }
+ *         },
+ *     
+ *         applyAvatar: function(config) {
+ *             return Ext.factory(config, Ext.Img, this.getAvatar());
+ *         },
+ *     
+ *         updateAvatar: function(newAvatar) {
+ *             if (newAvatar) {
+ *                 this.add(newAvatar);
+ *             }
+ *         },
+ *     
+ *         updateRecord: function(record) {     
+ *             if (!record) {
+ *                 return;
+ *             }
+ *
+ *             this.getUserName().setHtml(record.get('username'));
+ *             this.getText().setHtml(record.get('text'));
+ *             this.getAvatar().setSrc(record.get('avatar_url'));
+ *             this.callParent(arguments);
+ *
+ *         }
+ *     });
+ *
+ */
+Ext.define('Ext.dataview.component.ListItem', {
+    extend: 'Ext.dataview.component.DataItem',
+    xtype : 'listitem',
+
+    config: {
+<span id='Ext-dataview-component-ListItem-cfg-baseCls'>        baseCls: Ext.baseCSSPrefix + 'list-item',
+</span>
+<span id='Ext-dataview-component-ListItem-cfg-dataMap'>        dataMap: null,
+</span>
+<span id='Ext-dataview-component-ListItem-cfg-body'>        body: {
+</span>            xtype: 'component',
+            cls: 'x-list-item-body'
+        },
+
+<span id='Ext-dataview-component-ListItem-cfg-disclosure'>        disclosure: {
+</span>            xtype: 'component',
+            cls: 'x-list-disclosure',
+            hidden: true,
+            docked: 'right'
+        },
+
+<span id='Ext-dataview-component-ListItem-cfg-header'>        header: {
+</span>            xtype: 'component',
+            cls: 'x-list-header',
+            html: ' '
+        },
+
+<span id='Ext-dataview-component-ListItem-cfg-tpl'>        tpl: null,
+</span><span id='Ext-dataview-component-ListItem-cfg-items'>        items: null
+</span>    },
+
+<span id='Ext-dataview-component-ListItem-method-applyBody'>    applyBody: function(body) {
+</span>        if (body &amp;&amp; !body.isComponent) {
+            body = Ext.factory(body, Ext.Component, this.getBody());
+        }
+        return body;
+    },
+
+<span id='Ext-dataview-component-ListItem-method-updateBody'>    updateBody: function(body, oldBody) {
+</span>        if (body) {
+            this.add(body);
+        } else if (oldBody) {
+            oldBody.destroy();
+        }
+    },
+
+<span id='Ext-dataview-component-ListItem-method-applyHeader'>    applyHeader: function(header) {
+</span>        if (header &amp;&amp; !header.isComponent) {
+            header = Ext.factory(header, Ext.Component, this.getHeader());
+        }
+        return header;
+    },
+
+<span id='Ext-dataview-component-ListItem-method-updateHeader'>    updateHeader: function(header, oldHeader) {
+</span>        if (oldHeader) {
+            oldHeader.destroy();
+        }
+    },
+
+<span id='Ext-dataview-component-ListItem-method-applyDisclosure'>    applyDisclosure: function(disclosure) {
+</span>        if (disclosure &amp;&amp; !disclosure.isComponent) {
+            disclosure = Ext.factory(disclosure, Ext.Component, this.getDisclosure());
+        }
+        return disclosure;
+    },
+
+<span id='Ext-dataview-component-ListItem-method-updateDisclosure'>    updateDisclosure: function(disclosure, oldDisclosure) {
+</span>        if (disclosure) {
+            this.add(disclosure);
+        } else if (oldDisclosure) {
+            oldDisclosure.destroy();
+        }
+    },
+
+<span id='Ext-dataview-component-ListItem-method-updateTpl'>    updateTpl: function(tpl) {
+</span>        this.getBody().setTpl(tpl);
+    },
+
+<span id='Ext-dataview-component-ListItem-method-updateRecord'>    updateRecord: function(record) {
+</span>        var me = this,
+            dataview = me.dataview || this.getDataview(),
+            data = record &amp;&amp; dataview.prepareData(record.getData(true), dataview.getStore().indexOf(record), record),
+            dataMap = me.getDataMap(),
+            body = this.getBody(),
+            disclosure = this.getDisclosure();
+
+        me._record = record;
+
+        if (dataMap) {
+            me.doMapData(dataMap, data, body);
+        } else if (body) {
+            body.updateData(data || null);
+        }
+
+        if (disclosure &amp;&amp; record &amp;&amp; dataview.getOnItemDisclosure()) {
+            var disclosureProperty = dataview.getDisclosureProperty();
+            disclosure[(data.hasOwnProperty(disclosureProperty) &amp;&amp; data[disclosureProperty] === false) ? 'hide' : 'show']();
+        }
+
+<span id='Ext-dataview-component-ListItem-event-updatedata'>        /**
+</span>         * @event updatedata
+         * Fires whenever the data of the DataItem is updated.
+         * @param {Ext.dataview.component.DataItem} this The DataItem instance.
+         * @param {Object} newData The new data.
+         */
+        me.fireEvent('updatedata', me, data);
+    },
+
+<span id='Ext-dataview-component-ListItem-method-destroy'>    destroy: function() {
+</span>        Ext.destroy(this.getHeader());
+        this.callParent(arguments);
+    }
+});
+</pre>
+</body>
+</html>

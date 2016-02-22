@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-device-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.device.Cordova', {
+    alternateClassName: 'Ext.device.device.PhoneGap',
+
+    extend: 'Ext.device.device.Abstract',
+
+<span id='Ext-device-device-Cordova-property-availableListeners'>    availableListeners: [
+</span>        'pause',
+        'resume',
+        'backbutton',
+        'batterycritical',
+        'batterylow',
+        'batterystatus',
+        'menubutton',
+        'searchbutton',
+        'startcallbutton',
+        'endcallbutton',
+        'volumeupbutton',
+        'volumedownbutton'
+    ],
+
+<span id='Ext-device-device-Cordova-method-constructor'>    constructor: function() {
+</span>        // We can't get the device details until the device is ready, so lets wait.
+        if (Ext.isReady) {
+            this.onReady();
+        } else {
+            Ext.onReady(this.onReady, this, {single: true});
+        }
+    },
+
+<span id='Ext-device-device-Cordova-property-cordova'>    /**
+</span>     * @property {String} cordova
+     * Returns the version of Cordova running on the device.
+     *
+     *     alert('Device cordova: ' + Ext.device.Device.cordova);
+     */
+
+<span id='Ext-device-device-Cordova-property-version'>    /**
+</span>     * @property {String} version
+     * Returns the operating system version.
+     *
+     *     alert('Device Version: ' + Ext.device.Device.version);
+     */
+
+<span id='Ext-device-device-Cordova-property-model'>    /**
+</span>     * @property {String} model
+     * Returns the device's model name.
+     *
+     *     alert('Device Model: ' + Ext.device.Device.model);
+     */
+    
+<span id='Ext-device-device-Cordova-event-pause'>    /**
+</span>     * @event pause
+     * Fires when the application goes into the background
+     */
+    
+<span id='Ext-device-device-Cordova-event-resume'>    /**
+</span>     * @event resume
+     * Fires when the application goes into the foreground
+     */
+    
+<span id='Ext-device-device-Cordova-event-batterycritical'>    /**
+</span>     * @event batterycritical
+     * This event that fires when a Cordova application detects the percentage of battery 
+     * has reached the critical battery threshold.
+     */
+    
+<span id='Ext-device-device-Cordova-event-batterylow'>    /**
+</span>     * @event batterylow
+     * This event that fires when a Cordova application detects the percentage of battery 
+     * has reached the low battery threshold.
+     */
+    
+<span id='Ext-device-device-Cordova-event-batterystatus'>    /**
+</span>     * @event batterystatus
+     * This event that fires when a Cordova application detects the percentage of battery 
+     * has changed by at least 1 percent.
+     */
+    
+<span id='Ext-device-device-Cordova-event-backbutton'>    /**
+</span>     * @event backbutton
+     * This is an event that fires when the user presses the back button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-menubutton'>    /**
+</span>     * @event menubutton
+     * This is an event that fires when the user presses the menu button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-searchbutton'>    /**
+</span>     * @event searchbutton
+     * This is an event that fires when the user presses the search button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-startcallbutton'>    /**
+</span>     * @event startcallbutton
+     * This is an event that fires when the user presses the start call button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-endcallbutton'>    /**
+</span>     * @event endcallbutton
+     * This is an event that fires when the user presses the end call button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-volumeupbutton'>    /**
+</span>     * @event volumeupbutton
+     * This is an event that fires when the user presses the volume up button.
+     */
+    
+<span id='Ext-device-device-Cordova-event-volumedownbutton'>    /**
+</span>     * @event volumedownbutton
+     * This is an event that fires when the user presses the volume down button.
+     */
+
+    onReady: function() {
+        var me = this,
+            device = window.device;
+
+        me.name = device.name || device.model;
+        me.cordova = device.cordova;
+        me.platform =  device.platform || Ext.os.name;
+        me.uuid =  device.uuid;
+        me.version = device.version;
+        me.model = device.model;
+    },
+
+<span id='Ext-device-device-Cordova-method-doAddListener'>    doAddListener: function(name) {
+</span>        if (!this.addedListeners) {
+            this.addedListeners = [];
+        }
+
+        if (this.availableListeners.indexOf(name) != -1 &amp;&amp; this.addedListeners.indexOf(name) == -1) {
+            // Add the listeners
+            this.addedListeners.push(name);
+
+            document.addEventListener(name, function() {
+                me.fireEvent(name, me);
+            });
+        }
+
+        Ext.device.Device.mixins.observable.doAddListener.apply(Ext.device.Device.mixins.observable, arguments);
+    }
+});
+</pre>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-plugin-PullRefresh'>/**
+</span> * This plugin adds pull to refresh functionality to the List.
+ *
+ * ## Example
+ *
+ *     @example
+ *     var store = Ext.create('Ext.data.Store', {
+ *         fields: ['name', 'img', 'text'],
+ *         data: [
+ *             {
+ *                 name: 'rdougan',
+ *                 img: 'http://a0.twimg.com/profile_images/1261180556/171265_10150129602722922_727937921_7778997_8387690_o_reasonably_small.jpg',
+ *                 text: 'JavaScript development'
+ *             }
+ *         ]
+ *     });
+ *
+ *     Ext.create('Ext.dataview.List', {
+ *         fullscreen: true,
+ *
+ *         store: store,
+ *
+ *         plugins: [
+ *             {
+ *                 xclass: 'Ext.plugin.PullRefresh',
+ *                 pullText: 'Pull down for more new Tweets!'
+ *             }
+ *         ],
+ *
+ *         itemTpl: [
+ *             '&lt;img src=&quot;{img}&quot; alt=&quot;{name} photo&quot; /&gt;',
+ *             '&lt;div class=&quot;tweet&quot;&gt;&lt;b&gt;{name}:&lt;/b&gt; {text}&lt;/div&gt;'
+ *         ]
+ *     });
+ */
+Ext.define('Ext.plugin.PullRefresh', {
+    extend: 'Ext.Component',
+    alias: 'plugin.pullrefresh',
+    requires: ['Ext.DateExtras'],
+
+    config: {
+<span id='Ext-plugin-PullRefresh-cfg-width'>        width: '100%',
+</span><span id='Ext-plugin-PullRefresh-cfg-list'>        /**
+</span>         * @cfg {Ext.dataview.List} list
+         * The list to which this PullRefresh plugin is connected.
+         * This will usually by set automatically when configuring the list with this plugin.
+         * @accessor
+         */
+        list: null,
+
+<span id='Ext-plugin-PullRefresh-cfg-pullText'>        /**
+</span>         * @cfg {String} pullText The text that will be shown while you are pulling down.
+         * @accessor
+         */
+        pullText: 'Pull down to refresh...',
+
+<span id='Ext-plugin-PullRefresh-cfg-releaseText'>        /**
+</span>         * @cfg {String} releaseText The text that will be shown after you have pulled down enough to show the release message.
+         * @accessor
+         */
+        releaseText: 'Release to refresh...',
+
+<span id='Ext-plugin-PullRefresh-cfg-loadingText'>        /**
+</span>         * @cfg {String} loadingText The text that will be shown while the list is refreshing.
+         * @accessor
+         */
+        loadingText: 'Loading...',
+
+<span id='Ext-plugin-PullRefresh-cfg-loadedText'>        /**
+</span>         * @cfg {String} loadedText The text that will be when data has been loaded.
+         * @accessor
+         */
+        loadedText: 'Loaded.',
+
+<span id='Ext-plugin-PullRefresh-cfg-lastUpdatedText'>        /**
+</span>         * @cfg {String} lastUpdatedText The text to be shown in front of the last updated time.
+         * @accessor
+         */
+        lastUpdatedText: 'Last Updated:&amp;nbsp;',
+
+<span id='Ext-plugin-PullRefresh-cfg-scrollerAutoRefresh'>        /**
+</span>         * @cfg {Boolean} scrollerAutoRefresh Determines whether the attached scroller should automatically track size changes of its container.
+         * Enabling this will have performance impacts but will be necessary if your list size changes dynamically. For example if your list contains images
+         * that will be loading and have unspecified heights.
+         */
+        scrollerAutoRefresh: false,
+
+<span id='Ext-plugin-PullRefresh-cfg-autoSnapBack'>        /**
+</span>         * @cfg {Boolean} autoSnapBack Determines whether the pulldown should automatically snap back after data has been loaded.
+         * If false call {@link #snapBack}() to manually snap the pulldown back.
+         */
+        autoSnapBack: true,
+
+<span id='Ext-plugin-PullRefresh-cfg-snappingAnimationDuration'>        /**
+</span>         * @cfg {Number} snappingAnimationDuration The duration for snapping back animation after the data has been refreshed
+         * @accessor
+         */
+        snappingAnimationDuration: 300,
+<span id='Ext-plugin-PullRefresh-cfg-lastUpdatedDateFormat'>        /**
+</span>         * @cfg {String} lastUpdatedDateFormat The format to be used on the last updated date.
+         */
+        lastUpdatedDateFormat: 'm/d/Y h:iA',
+
+<span id='Ext-plugin-PullRefresh-cfg-overpullSnapBackDuration'>        /**
+</span>         * @cfg {Number} overpullSnapBackDuration The duration for snapping back when pulldown has been lowered further then its height.
+         */
+        overpullSnapBackDuration: 300,
+
+<span id='Ext-plugin-PullRefresh-cfg-pullTpl'>        /**
+</span>         * @cfg {Ext.XTemplate/String/Array} pullTpl The template being used for the pull to refresh markup.
+         * Will be passed a config object with properties state, message and updated
+         *
+         * @accessor
+         */
+        pullTpl: [
+            '&lt;div class=&quot;x-list-pullrefresh-arrow&quot;&gt;&lt;/div&gt;',
+            '&lt;div class=&quot;x-loading-spinner&quot;&gt;',
+                '&lt;span class=&quot;x-loading-top&quot;&gt;&lt;/span&gt;',
+                '&lt;span class=&quot;x-loading-right&quot;&gt;&lt;/span&gt;',
+                '&lt;span class=&quot;x-loading-bottom&quot;&gt;&lt;/span&gt;',
+                '&lt;span class=&quot;x-loading-left&quot;&gt;&lt;/span&gt;',
+            '&lt;/div&gt;',
+            '&lt;div class=&quot;x-list-pullrefresh-wrap&quot;&gt;',
+                '&lt;h3 class=&quot;x-list-pullrefresh-message&quot;&gt;{message}&lt;/h3&gt;',
+                '&lt;div class=&quot;x-list-pullrefresh-updated&quot;&gt;{updated}&lt;/div&gt;',
+            '&lt;/div&gt;'
+        ].join(''),
+
+<span id='Ext-plugin-PullRefresh-cfg-translatable'>        translatable: true
+</span>    },
+
+<span id='Ext-plugin-PullRefresh-property-S-state'>    // @private
+</span>    $state: &quot;pull&quot;,
+<span id='Ext-plugin-PullRefresh-method-getState'>    // @private
+</span>    getState: function() {
+        return this.$state
+    },
+<span id='Ext-plugin-PullRefresh-method-setState'>    // @private
+</span>    setState: function(value) {
+        this.$state = value;
+        this.updateView();
+    },
+<span id='Ext-plugin-PullRefresh-property-S-isSnappingBack'>    // @private
+</span>    $isSnappingBack: false,
+<span id='Ext-plugin-PullRefresh-method-getIsSnappingBack'>    // @private
+</span>    getIsSnappingBack: function() {
+        return this.$isSnappingBack;
+    },
+<span id='Ext-plugin-PullRefresh-method-setIsSnappingBack'>    // @private
+</span>    setIsSnappingBack: function(value) {
+        this.$isSnappingBack = value;
+    },
+
+<span id='Ext-plugin-PullRefresh-method-init'>    // @private
+</span>    init: function(list) {
+        var me = this;
+
+        me.setList(list);
+        me.initScrollable();
+    },
+
+<span id='Ext-plugin-PullRefresh-method-getElementConfig'>    getElementConfig: function() {
+</span>        return {
+            reference: 'element',
+            classList: ['x-unsized'],
+            children: [
+                {
+                    reference: 'innerElement',
+                    className: Ext.baseCSSPrefix + 'list-pullrefresh'
+                }
+            ]
+        };
+    },
+
+<span id='Ext-plugin-PullRefresh-method-initScrollable'>    // @private
+</span>    initScrollable: function() {
+        var me = this,
+            list = me.getList(),
+            scrollable = list.getScrollable(),
+            scroller;
+
+        if (!scrollable) {
+            return;
+        }
+
+        scroller = scrollable.getScroller();
+        scroller.setAutoRefresh(this.getScrollerAutoRefresh());
+
+        me.lastUpdated = new Date();
+
+        list.insert(0, me);
+
+        scroller.on({
+            scroll: me.onScrollChange,
+            scope: me
+        });
+
+        this.updateView();
+    },
+
+<span id='Ext-plugin-PullRefresh-method-applyPullTpl'>    // @private
+</span>    applyPullTpl: function(config) {
+        if (config instanceof Ext.XTemplate) {
+            return config
+        } else {
+            return new Ext.XTemplate(config);
+        }
+    },
+
+<span id='Ext-plugin-PullRefresh-method-updateList'>    // @private
+</span>    updateList: function(newList, oldList) {
+        var me = this;
+
+        if (newList &amp;&amp; newList != oldList) {
+            newList.on({
+                order: 'after',
+                scrollablechange: me.initScrollable,
+                scope: me
+            });
+        } else if (oldList) {
+            oldList.un({
+                order: 'after',
+                scrollablechange: me.initScrollable,
+                scope: me
+            });
+        }
+    },
+
+<span id='Ext-plugin-PullRefresh-method-getPullHeight'>    // @private
+</span>    getPullHeight: function() {
+       return this.innerElement.getHeight();
+    },
+
+<span id='Ext-plugin-PullRefresh-method-fetchLatest'>    /**
+</span>     * @private
+     * Attempts to load the newest posts via the attached List's Store's Proxy
+     */
+    fetchLatest: function() {
+        var store = this.getList().getStore(),
+            proxy = store.getProxy(),
+            operation;
+
+        operation = Ext.create('Ext.data.Operation', {
+            page: 1,
+            start: 0,
+            model: store.getModel(),
+            limit: store.getPageSize(),
+            action: 'read',
+            sorters: store.getSorters(),
+            filters: store.getRemoteFilter() ? store.getFilters() : []
+        });
+
+        proxy.read(operation, this.onLatestFetched, this);
+    },
+
+<span id='Ext-plugin-PullRefresh-method-onLatestFetched'>    /**
+</span>     * @private
+     * Called after fetchLatest has finished grabbing data. Matches any returned records against what is already in the
+     * Store. If there is an overlap, updates the existing records with the new data and inserts the new items at the
+     * front of the Store. If there is no overlap, insert the new records anyway and record that there's a break in the
+     * timeline between the new and the old records.
+     */
+    onLatestFetched: function(operation) {
+        var store = this.getList().getStore(),
+            oldRecords = store.getData(),
+            newRecords = operation.getRecords(),
+            length = newRecords.length,
+            toInsert = [],
+            newRecord, oldRecord, i;
+
+        for (i = 0; i &lt; length; i++) {
+            newRecord = newRecords[i];
+            oldRecord = oldRecords.getByKey(newRecord.getId());
+
+            if (oldRecord) {
+                oldRecord.set(newRecord.getData());
+            } else {
+                toInsert.push(newRecord);
+            }
+
+            oldRecord = undefined;
+        }
+
+        store.insert(0, toInsert);
+        this.setState(&quot;loaded&quot;);
+        this.fireEvent('latestfetched', this, toInsert);
+        if (this.getAutoSnapBack()) {
+            this.snapBack();
+        }
+    },
+
+<span id='Ext-plugin-PullRefresh-method-snapBack'>    /**
+</span>     * Snaps the List back to the top after a pullrefresh is complete
+     * @param {Boolean=} force Force the snapback to occur regardless of state {optional}
+     */
+    snapBack: function(force) {
+        if(this.getState() !== &quot;loaded&quot; &amp;&amp; force !== true) return;
+
+        var list = this.getList(),
+            scroller = list.getScrollable().getScroller();
+
+        scroller.refresh();
+        scroller.minPosition.y = 0;
+
+        scroller.on({
+            scrollend: this.onSnapBackEnd,
+            single: true,
+            scope: this
+        });
+
+        this.setIsSnappingBack(true);
+        scroller.scrollTo(null, 0, {duration: this.getSnappingAnimationDuration()});
+    },
+
+<span id='Ext-plugin-PullRefresh-method-onSnapBackEnd'>    /**
+</span>     * @private
+     * Called when PullRefresh has been snapped back to the top
+     */
+    onSnapBackEnd: function() {
+        this.setState(&quot;pull&quot;);
+        this.setIsSnappingBack(false);
+    },
+
+<span id='Ext-plugin-PullRefresh-method-onScrollChange'>    /**
+</span>     * @private
+     * Called when the Scroller updates from the list
+     * @param scroller
+     * @param x
+     * @param y
+     */
+    onScrollChange: function(scroller, x, y) {
+        if (y &lt;= 0) {
+            var pullHeight = this.getPullHeight(),
+                isSnappingBack = this.getIsSnappingBack();
+
+            if(this.getState() === &quot;loaded&quot; &amp;&amp; !isSnappingBack) {
+                this.snapBack();
+            }
+
+            if (this.getState() !== &quot;loading&quot; &amp;&amp; this.getState() !==&quot;loaded&quot;) {
+                if (-y &gt;= pullHeight + 10) {
+                    this.setState(&quot;release&quot;);
+                    scroller.getContainer().onBefore({
+                        dragend: 'onScrollerDragEnd',
+                        single: true,
+                        scope: this
+                    });
+                } else if ((this.getState() === &quot;release&quot;) &amp;&amp; (-y &lt; pullHeight + 10)) {
+                    this.setState(&quot;pull&quot;);
+                    scroller.getContainer().unBefore({
+                        dragend: 'onScrollerDragEnd',
+                        single: true,
+                        scope: this
+                    });
+                }
+            }
+            this.getTranslatable().translate(0, -y);
+        }
+    },
+
+<span id='Ext-plugin-PullRefresh-method-onScrollerDragEnd'>    /**
+</span>     * @private
+     * Called when the user is done dragging, this listener is only added when the user has pulled far enough for a refresh
+     */
+    onScrollerDragEnd: function() {
+        if (this.getState() !== &quot;loading&quot;) {
+            var list = this.getList(),
+                scroller = list.getScrollable().getScroller(),
+                translateable = scroller.getTranslatable();
+
+            this.setState(&quot;loading&quot;);
+            translateable.setEasingY({duration: this.getOverpullSnapBackDuration()});
+            scroller.minPosition.y = -this.getPullHeight();
+            scroller.on({
+                scrollend: 'fetchLatest',
+                single: true,
+                scope: this
+            });
+        }
+    },
+
+<span id='Ext-plugin-PullRefresh-method-updateView'>    /**
+</span>     * @private
+     * Updates the content based on the PullRefresh Template
+     */
+    updateView: function() {
+        var state = this.getState(),
+            lastUpdatedText = this.getLastUpdatedText() + Ext.util.Format.date(this.lastUpdated, this.getLastUpdatedDateFormat()),
+            templateConfig = {state: state, updated: lastUpdatedText},
+            stateFn = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase(),
+            fn = &quot;get&quot; + stateFn + &quot;Text&quot;;
+
+        if (this[fn] &amp;&amp; Ext.isFunction(this[fn])) {
+            templateConfig.message = this[fn].call(this);
+        }
+
+        this.innerElement.removeCls([&quot;loaded&quot;, &quot;loading&quot;, &quot;release&quot;, &quot;pull&quot;], Ext.baseCSSPrefix + &quot;list-pullrefresh&quot;);
+        this.innerElement.addCls(this.getState(), Ext.baseCSSPrefix + &quot;list-pullrefresh&quot;);
+        this.getPullTpl().overwrite(this.innerElement, templateConfig);
+    }
+}, function() {
+    //&lt;deprecated product=touch since=2.3&gt;
+
+<span id='Ext-plugin-PullRefresh-method-setPullRefreshText'>    /**
+</span>     * Updates the PullRefreshText.
+     * @method setPullRefreshText
+     * @param {String} text
+     * @deprecated 2.3.0 Please use {@link #setPullText} instead.
+     */
+    Ext.deprecateClassMethod(this, 'setPullRefreshText', 'setPullText');
+
+<span id='Ext-plugin-PullRefresh-method-setReleaseRefreshText'>    /**
+</span>     * Updates the ReleaseRefreshText.
+     * @method setReleaseRefreshText
+     * @param {String} text
+     * @deprecated 2.3.0 Please use {@link #setReleaseText} instead.
+     */
+    Ext.deprecateClassMethod(this, 'setReleaseRefreshText', 'setReleaseText');
+
+    this.override({
+        constructor: function(config) {
+            if (config) {
+<span id='Ext-plugin-PullRefresh-cfg-pullReleaseText'>                /**
+</span>                 * @cfg {String} pullReleaseText
+                 * Optional Text during the Release State.
+                 * @deprecated 2.3.0 Please use {@link #releaseText} instead
+                 */
+                if (config.hasOwnProperty('pullReleaseText')) {
+                    //&lt;debug warn&gt;
+                    Ext.Logger.deprecate(&quot;'pullReleaseText' config is deprecated, please use 'releaseText' config instead&quot;, this);
+                    //&lt;/debug&gt;
+                    config.releaseText = config.pullReleaseText;
+                    delete config.pullReleaseText;
+                }
+
+<span id='Ext-plugin-PullRefresh-cfg-pullRefreshText'>                /**
+</span>                 * @cfg {String} pullRefreshText
+                 * Optional Text during the Pull State.
+                 * @deprecated 2.3.0 Please use {@link #pullText} instead
+                 */
+                if (config.hasOwnProperty('pullRefreshText')) {
+                    //&lt;debug warn&gt;
+                    Ext.Logger.deprecate(&quot;'pullRefreshText' config is deprecated, please use 'pullText' config instead&quot;, this);
+                    //&lt;/debug&gt;
+                    config.pullText = config.pullRefreshText;
+                    delete config.pullRefreshText;
+                }
+            }
+
+            this.callParent([config]);
+        }
+    });
+    //&lt;/deprecated&gt;
+});
+</pre>
+</body>
+</html>

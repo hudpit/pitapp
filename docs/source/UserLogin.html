@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-view-UserLogin'>/**
+</span> * ## Overview
+ * User Login Panel View.
+ *
+ * Sencha Touch uses views for user interaction.  From the user's perspective the application is just a series of views.  [Read more about Sencha Touch Views](http://docs.sencha.com/touch/2.4/components/views.html).  The user login view is used to display login interactions, the view comprises of a simple form with email address and password fields with buttons.
+ *
+ * Controllers are responsible for responding to events that occur within the app.  The home panel controller responds to events within this view: {@link PointInTime.controller.HomePanel}.
+ *
+ * Screen shot of panel view inside application running on IOS8:
+ * {@img shots/login.PNG Login Panel}
+ */
+Ext.define(&quot;PointInTime.view.UserLogin&quot;, {
+    extend: 'Ext.navigation.View',
+    xtype: 'loginpanel',
+<span id='PointInTime-view-UserLogin-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * View config object
+     */
+    config: {
+<span id='PointInTime-view-UserLogin-cfg-itemId'>        /**
+</span>         * @cfg {String} itemId
+         * Panel itemId
+         */
+        itemId: 'userloginpanel',
+<span id='PointInTime-view-UserLogin-cfg-fullscreen'>        /**
+</span>         * @cfg {Boolean} fullscreen
+         * True or False, Panel Full screen
+         */
+        fullscreen: true,
+<span id='PointInTime-view-UserLogin-cfg-listeners'>        /**
+</span>         * @cfg {Oject} listeners
+         * View event listeners
+         */
+        listeners: {
+            painted: function(navView) {
+                PointInTime.utils.Global.setPaintedpage(&quot;userlogin&quot;);
+            },
+            resize: function(el) {
+                var me = this;
+                var elh = el.getHeight();
+                //alert(elh);
+                var setflex = 3;
+                var homepanel = me.down('#homePanelImages');
+
+                var homeimg = me.down('#homeImage');
+
+                var heightarray = [480,620,900,1000];
+                for (i = 0; i &lt; heightarray.length; i++) {
+                    if (elh &gt; heightarray[i]) {
+                        homepanel.setFlex(setflex+i);
+                        break;
+                    }
+                }
+
+            },
+            back: function(navView) {
+                PointInTime.utils.Global.setPaintedpage(&quot;userlogin&quot;);
+            }
+        },
+<span id='PointInTime-view-UserLogin-cfg-items'>        /**
+</span>         * @cfg {Object} items
+         * Panel Items
+         */
+        items: [{
+            title: 'Welcome',
+            xtype: 'panel',
+            itemId: 'welcomepanel',
+            layout: 'fit',
+            items: [
+                {
+                    xtype: 'formpanel',
+                    standardSubmit: false,
+                    submitOnAction : false,
+                    itemId: 'userloginform',
+                    id: 'userloginform',
+                    items: [
+                        {
+                            xtype: 'panel',
+                            padding: '5px',
+                            items: [
+                                {
+                                    xtype: 'image',
+                                    itemId: 'homeImage',
+                                    src: 'resources/images/mock2-grey.png',
+                                    height: '190px'
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'fieldset',
+                            defaults: {labelWidth: 95},
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    label: 'Email',
+                                    name: 'email',
+                                    itemId: 'email',
+                                    requird: true,
+                                    placeHolder: 'Enter Email'
+                                },
+                                {
+                                    xtype: 'passwordfield',
+                                    label: 'Password',
+                                    name: 'password',
+                                    itemId: 'password',
+                                    autoComplete: false,
+                                    autoCorrect: false,
+                                    autoCapitalize: false,
+                                    placeHolder: 'Enter Password'
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'panel',
+                            style: 'padding-left:10px;padding-right:10px;',
+                            items: [{
+                                xtype: 'button',
+                                itemId: 'loginbutton',
+                                text: 'Login',
+                                ui: 'confirm'
+                            }]
+                        },
+                        {
+                            xtype: 'panel',
+                            itemId: 'buttonpanel',
+                            style: 'padding:10px;',
+                            layout: {
+                                type: 'hbox'
+                            },
+                            items: [
+                                {
+                                    xtype: 'button',
+                                    flex: 1,
+                                    itemId: 'registerbutton',
+                                    text: 'Register',
+                                    style: 'font-size:small;font-weight:bold;',
+                                    handler: function() {this.up(&quot;loginpanel&quot;).push(Ext.create('PointInTime.view.UserInfo', {
+                                        title: 'Register',
+                                        is_updating: false
+                                    }))},
+                                    ui: 'action'
+                                },
+                                {xtype: 'spacer', width: 10},
+                                {
+                                    xtype: 'button',
+                                    flex : 2,
+                                    itemId: 'forgotpasswordbutton',
+                                    text: 'Forgot Password',
+                                    style: 'font-size:small;font-weight:bold;',
+                                    handler: function() {this.up(&quot;loginpanel&quot;).push(Ext.create('PointInTime.view.ForgotPasswordPanel'))},
+                                    ui: 'action'
+                                },
+                                {xtype: 'spacer', width: 10},
+                                {
+                                    xtype: 'button',
+                                    text: 'Help',
+                                    style: 'font-size:small;font-weight:bold;',
+                                    flex : 1,
+                                    itemId: 'openloginhelp',
+                                    ui: 'action'
+                                }
+                            ]
+                        }],
+                    flex: 2
+                }]
+        }]
+    },
+
+<span id='PointInTime-view-UserLogin-method-getStoreVals'>    /**
+</span>     * get User Settings Store Values, set Email address and blank password
+     */
+    getStoreVals: function() {
+        var me = this;
+        var usersetting_store = Ext.getStore('usersettings');
+
+        //if there is a record or not
+        if (usersetting_store.getCount() &gt; 0) {
+
+            var xrec = usersetting_store.getAt(0);
+            var set_email_address;
+
+            if (xrec.data.email_address === undefined) {
+                set_email_address = '';
+            } else {
+                set_email_address = xrec.data.email_address;
+            }
+
+            me.down(&quot;#userloginform&quot;).down(&quot;#email&quot;).setValue(set_email_address);
+            me.down(&quot;#userloginform&quot;).down(&quot;#password&quot;).setValue('');
+            return true;
+        } else {
+            return false;
+        }
+
+    },
+
+<span id='PointInTime-view-UserLogin-method-hasConnectionAndSettings'>    /**
+</span>     * Does device have internet connection and user settings store values?
+     * @return {Boolean} true or false
+     */
+    hasConnectionAndSettings : function() {
+        if (navigator.onLine &amp;&amp; this.getStoreVals()) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+<span id='PointInTime-view-UserLogin-method-initialize'>    /**
+</span>     * initialize function
+     * This method is called automatically.
+     */
+    initialize: function() {
+        this.callParent();
+        var me = this;
+
+        if (navigator.onLine) {
+            if (!me.getStoreVals()) {
+                Ext.Msg.alert('Setup', 'It appears that you have not registered an account as of yet.  If you have then please ignore this message and log in.  Otherwise, please tap \&quot;Register\&quot; to create an account.');
+            }
+        } else if (!me.hasConnectionAndSettings()) {
+            me.disable();
+            me.down(&quot;#userloginform&quot;).down(&quot;#loginbutton&quot;).setDisabled(true);
+            me.down(&quot;#userloginform&quot;).down(&quot;#registerbutton&quot;).setDisabled(true);
+            me.down(&quot;#userloginform&quot;).down(&quot;#forgotpasswordbutton&quot;).setDisabled(true);
+
+            Ext.Msg.alert('No Connection', 'You are not connected and have no saved signup information. You need an internet connection to signup. Click \&quot;register\&quot; to signup when connected.');
+        } else {
+            me.getStoreVals();
+        }
+    }
+});</pre>
+</body>
+</html>

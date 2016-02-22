@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-store-PITEntryDrafts'>/**
+</span> * ## Overview
+ * The PIT Entry Draft store is used for PIT draft information, each PIT draft entry is bound to a seperate survey model entry.
+ * The Store class encapsulates a client side cache of Model objects. Stores load data via a Proxy, and also provide functions for sorting, filtering and querying the model instances contained within it.
+ *
+ *  {@link Ext.data.Store}
+ *
+ *  {@link PointInTime.model.PITEntryDraftModel}
+ */
+Ext.define('PointInTime.store.PITEntryDrafts', {
+    extend: 'Ext.data.Store',
+    alias : 'store.PITEntryDrafts',
+    requires: [
+        'Ext.data.proxy.LocalStorage'
+    ],
+<span id='PointInTime-store-PITEntryDrafts-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Store config object
+     */
+    config: {
+<span id='PointInTime-store-PITEntryDrafts-cfg-storeId'>        storeId: 'PITEntryDrafts',
+</span><span id='PointInTime-store-PITEntryDrafts-cfg-model'>        model: 'PointInTime.model.PITEntryDraftModel',
+</span><span id='PointInTime-store-PITEntryDrafts-cfg-autoLoad'>        autoLoad: true,
+</span><span id='PointInTime-store-PITEntryDrafts-cfg-proxy'>        proxy: {
+</span>            //use sessionstorage if need to save data for that
+            //specific session only
+            type: 'localstorage',
+            id  : 'PITDraftsKey'
+        }
+    }
+});</pre>
+</body>
+</html>

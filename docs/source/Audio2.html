@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-util-Audio'>/**
+</span> * @private
+ */
+Ext.define('Ext.util.Audio', {
+    singleton: true,
+<span id='Ext-util-Audio-property-ctx'>    ctx: null,
+</span>
+<span id='Ext-util-Audio-method-beep'>    beep: function(callback) {
+</span>        this.oscillate(200, 1, callback);
+    },
+
+<span id='Ext-util-Audio-method-oscillate'>    oscillate: function(duration, type, callback) {
+</span>        if (!this.ctx) {
+            this.ctx = new (window.audioContext || window.webkitAudioContext);
+        }
+
+        if (!this.ctx) {
+            console.log(&quot;BEEP&quot;);
+            return;
+        }
+
+        type = (type % 5) || 0;
+
+        try {
+            var osc = this.ctx.createOscillator();
+            osc.type = type;
+            osc.connect(this.ctx.destination);
+            osc.noteOn(0);
+
+            setTimeout(function() {
+                osc.noteOff(0);
+                if(callback) callback();
+            }, duration);
+        } catch (e) {
+            throw new Error(&quot;[Ext.util.Audio.oscillate] Error with Oscillator playback&quot;);
+        }
+
+    }
+
+})
+;
+
+
+
+</pre>
+</body>
+</html>

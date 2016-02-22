@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-Browser'>/**
+</span> *
+ *
+ * @mixins Ext.device.browser.Abstract
+ *
+ * @aside guide native_apis
+ */
+Ext.define('Ext.device.Browser', {
+    singleton: true,
+
+    requires: [
+        'Ext.device.Communicator',
+        'Ext.device.browser.Cordova',
+        'Ext.device.browser.Simulator'
+    ],
+
+<span id='Ext-device-Browser-method-constructor'>    constructor: function() {
+</span>        var browserEnv = Ext.browser.is;
+
+        if (browserEnv.WebView &amp;&amp; browserEnv.Cordova) {
+            return Ext.create('Ext.device.browser.Cordova');
+        }
+
+        return Ext.create('Ext.device.browser.Simulator');
+    }
+});
+</pre>
+</body>
+</html>

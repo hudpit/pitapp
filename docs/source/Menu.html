@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-Menu'>/**
+</span> * {@link Ext.Menu}'s are used with {@link Ext.Viewport#setMenu}. A menu can be linked with any side of the screen (top, left, bottom or right)
+ *  and will simply describe the contents of your menu. To use this menu you will call various menu related functions on the {@link Ext.Viewport}
+ * such as {@link Ext.Viewport#showMenu}, {@link Ext.Viewport#hideMenu}, {@link Ext.Viewport#toggleMenu}, {@link Ext.Viewport#hideOtherMenus},
+ * or {@link Ext.Viewport#hideAllMenus}.
+ *
+ *      @example preview
+ *      var menu = Ext.create('Ext.Menu', {
+ *          items: [
+ *              {
+ *                  text: 'Settings',
+ *                  iconCls: 'settings'
+ *              },
+ *              {
+ *                  text: 'New Item',
+ *                  iconCls: 'compose'
+ *              },
+ *              {
+ *                  text: 'Star',
+ *                  iconCls: 'star'
+ *              }
+ *          ]
+ *      });
+ *
+ *      Ext.Viewport.setMenu(menu, {
+ *          side: 'left',
+ *          reveal: true
+ *      });
+ *
+ *      Ext.Viewport.showMenu('left');
+ *
+ * The {@link #defaultType} of a Menu item is a {@link Ext.Button button}.
+ */
+Ext.define('Ext.Menu', {
+    extend: 'Ext.Sheet',
+    xtype: 'menu',
+    requires: ['Ext.Button'],
+
+    config: {
+<span id='Ext-Menu-cfg-baseCls'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        baseCls: Ext.baseCSSPrefix + 'menu',
+
+<span id='Ext-Menu-cfg-left'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        left: 0,
+
+<span id='Ext-Menu-cfg-right'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        right: 0,
+
+<span id='Ext-Menu-cfg-bottom'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        bottom: 0,
+
+<span id='Ext-Menu-cfg-height'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        height: 'auto',
+
+<span id='Ext-Menu-cfg-width'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        width: 'auto',
+
+<span id='Ext-Menu-cfg-defaultType'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        defaultType: 'button',
+
+<span id='Ext-Menu-cfg-showAnimation'>        /**
+</span>         * @hide
+         */
+        showAnimation: null,
+
+<span id='Ext-Menu-cfg-hideAnimation'>        /**
+</span>         * @hide
+         */
+        hideAnimation: null,
+
+<span id='Ext-Menu-cfg-centered'>        /**
+</span>         * @hide
+         */
+        centered: false,
+
+<span id='Ext-Menu-cfg-modal'>        /**
+</span>         * @hide
+         */
+        modal: true,
+
+<span id='Ext-Menu-cfg-hidden'>        /**
+</span>         * @hide
+         */
+        hidden: true,
+
+<span id='Ext-Menu-cfg-hideOnMaskTap'>        /**
+</span>         * @hide
+         */
+        hideOnMaskTap: true,
+
+<span id='Ext-Menu-cfg-translatable'>        /**
+</span>         * @hide
+         */
+        translatable: {
+            translationMethod: null
+        }
+    },
+
+<span id='Ext-Menu-method-constructor'>    constructor: function() {
+</span>        this.config.translatable.translationMethod = Ext.browser.is.AndroidStock2 ? 'cssposition' : 'csstransform';
+        this.callParent(arguments);
+    },
+
+<span id='Ext-Menu-property-platformConfig'>    platformConfig: [{
+</span>        theme: ['Windows']
+    }, {
+        theme: ['Blackberry', 'Blackberry103'],
+        ui: 'context',
+        layout: {
+            pack: 'center'
+        }
+    }],
+
+<span id='Ext-Menu-method-updateUi'>    updateUi: function(newUi, oldUi) {
+</span>        this.callParent(arguments);
+
+        if (newUi != oldUi &amp;&amp; (Ext.theme.is.Blackberry || Ext.theme.is.Blackberry103)) {
+            if (newUi == 'context') {
+                this.innerElement.swapCls('x-vertical', 'x-horizontal');
+            }
+            else if (newUi == 'application') {
+                this.innerElement.swapCls('x-horizontal', 'x-vertical');
+            }
+        }
+    },
+
+<span id='Ext-Menu-method-updateHideOnMaskTap'>    updateHideOnMaskTap : function(hide) {
+</span>        var mask = this.getModal();
+
+        if (mask) {
+            mask[hide ? 'on' : 'un'].call(mask, 'tap', function() {
+                Ext.Viewport.hideMenu(this.$side);
+            }, this);
+        }
+    },
+
+<span id='Ext-Menu-method-doSetHidden'>    /**
+</span>     * Only fire the hide event if it is initialized
+     */
+    doSetHidden: function() {
+        if (this.initialized) {
+            this.callParent(arguments);
+        }
+    }
+});
+</pre>
+</body>
+</html>

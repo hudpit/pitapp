@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-store-AppSettings'>/**
+</span> * ## Overview
+ * The application settings store is used to store client side data about the application.
+ * The Store class encapsulates a client side cache of Model objects. Stores load data via a Proxy, and also provide functions for sorting, filtering and querying the model instances contained within it.
+ *
+ * {@link Ext.data.Store}
+ *
+ * {@link PointInTime.model.AppSettingsModel}
+ */
+Ext.define('PointInTime.store.AppSettings', {
+    extend: 'Ext.data.Store',
+    alias  : 'store.appsettings',
+    requires: [
+        'Ext.data.proxy.LocalStorage'
+    ],
+<span id='PointInTime-store-AppSettings-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Store config object
+     */
+    config: {
+<span id='PointInTime-store-AppSettings-cfg-storeId'>        storeId: 'appsettings',
+</span><span id='PointInTime-store-AppSettings-cfg-model'>        model: 'PointInTime.model.AppSettingsModel',
+</span><span id='PointInTime-store-AppSettings-cfg-autoLoad'>        autoLoad: true,
+</span><span id='PointInTime-store-AppSettings-cfg-proxy'>        proxy: {
+</span>            //use sessionstorage if need to save data for that
+            //specific session only
+            type: 'localstorage',
+            id  : 'AppSettingsKey'
+        }
+    }
+});</pre>
+</body>
+</html>

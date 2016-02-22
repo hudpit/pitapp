@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-storage-Abstract'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.storage.Abstract', {
+
+    config: {
+<span id='Ext-device-storage-Abstract-cfg-databaseName'>        databaseName: &quot;Sencha&quot;,
+</span><span id='Ext-device-storage-Abstract-cfg-databaseVersion'>        databaseVersion: '1.0',
+</span><span id='Ext-device-storage-Abstract-cfg-databaseDisplayName'>        databaseDisplayName: 'Sencha Database',
+</span><span id='Ext-device-storage-Abstract-cfg-databaseSize'>        databaseSize: 5 * 1024 * 1024
+</span>    },
+
+<span id='Ext-device-storage-Abstract-method-openDatabase'>    openDatabase: function(config) {
+</span>        var defaultConfig = Ext.device.storage.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            name: defaultConfig.databaseName,
+            version: defaultConfig.databaseVersion,
+            displayName: defaultConfig.databaseDisplayName,
+            size: defaultConfig.databaseSize
+        });
+
+        return config;
+    },
+
+<span id='Ext-device-storage-Abstract-method-numKeys'>    numKeys: Ext.emptyFn,
+</span><span id='Ext-device-storage-Abstract-method-getKey'>    getKey: Ext.emptyFn,
+</span><span id='Ext-device-storage-Abstract-method-getItem'>    getItem: Ext.emptyFn,
+</span><span id='Ext-device-storage-Abstract-method-setItem'>    setItem: Ext.emptyFn,
+</span><span id='Ext-device-storage-Abstract-method-removeItem'>    removeItem: Ext.emptyFn,
+</span><span id='Ext-device-storage-Abstract-method-clear'>    clear: Ext.emptyFn
+</span>});
+</pre>
+</body>
+</html>

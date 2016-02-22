@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-notification-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.notification.Cordova', {
+    alternateClassName: 'Ext.device.notification.PhoneGap',
+    extend: 'Ext.device.notification.Abstract',
+    requires: ['Ext.device.Communicator'],
+
+<span id='Ext-device-notification-Cordova-method-show'>    show: function(config) {
+</span>        config = this.callParent(arguments);
+        this.confirm(config);
+    },
+
+<span id='Ext-device-notification-Cordova-method-confirm'>    confirm: function(config) {
+</span>        config = this.callParent(arguments);
+
+        var buttons = config.buttons,
+            ln = config.buttons.length;
+
+        if (ln &amp;&amp; typeof buttons[0] != &quot;string&quot;) {
+            var newButtons = [],
+                i;
+
+            for (i = 0; i &lt; ln; i++) {
+                newButtons.push(buttons[i].text);
+            }
+            buttons = newButtons;
+        }
+
+        var callback = function(index) {
+            if (config.callback) {
+                config.callback.apply(config.scope, (buttons) ? [buttons[index - 1].toLowerCase()] : []);
+            }
+        };
+
+
+        navigator.notification.confirm(
+            config.message,
+            callback,
+            config.title,
+            buttons
+        );
+    },
+
+<span id='Ext-device-notification-Cordova-method-alert'>    alert: function(config) {
+</span>        navigator.notification.alert(
+            config.message,
+            config.callback,
+            config.title,
+            config.buttonName
+        );
+    },
+
+<span id='Ext-device-notification-Cordova-method-prompt'>    prompt: function(config) {
+</span>        config = this.callParent(arguments);
+        var buttons = config.buttons,
+            ln = config.buttons.length;
+
+        if (ln &amp;&amp; typeof buttons[0] != &quot;string&quot;) {
+            var newButtons = [],
+                i;
+
+            for (i = 0; i &lt; ln; i++) {
+                newButtons.push(buttons[i].text);
+            }
+            buttons = newButtons;
+        }
+
+        var callback = function(result) {
+            if (config.callback) {
+                config.callback.call(config.scope, (buttons) ? buttons[result.buttonIndex - 1].toLowerCase() : null, result.input1);
+            }
+        };
+
+        navigator.notification.prompt(
+            config.message,
+            callback,
+            config.title,
+            buttons
+        );
+    },
+
+<span id='Ext-device-notification-Cordova-method-vibrate'>    vibrate: function(time) {
+</span>        navigator.notification.vibrate(time);
+    },
+
+<span id='Ext-device-notification-Cordova-method-beep'>    beep: function(times) {
+</span>        navigator.notification.vibrate(times);
+    }
+});
+</pre>
+</body>
+</html>

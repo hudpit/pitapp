@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-dataview-component-SimpleListItem'>/**
+</span> * A SimpleListItem is a simplified list item that is used by {@link Ext.dataview.List} when
+ * useSimpleItems is set to true.  It supports disclosure icons and headers and generates the
+ * slimmest markup possible to achieve this. It doesn't support container functionality like adding
+ * or docking items. If you require those features you should have your list use
+ * {@link Ext.dataview.component.ListItem} instances.
+ */
+Ext.define('Ext.dataview.component.SimpleListItem', {
+    extend: 'Ext.Component',
+    xtype : 'simplelistitem',
+
+    config: {
+<span id='Ext-dataview-component-SimpleListItem-cfg-baseCls'>        baseCls: Ext.baseCSSPrefix + 'list-item',
+</span>
+<span id='Ext-dataview-component-SimpleListItem-cfg-disclosure'>        disclosure: {
+</span>            xtype: 'component',
+            cls: 'x-list-disclosure',
+            hidden: true
+        },
+
+<span id='Ext-dataview-component-SimpleListItem-cfg-header'>        header: {
+</span>            xtype: 'component',
+            cls: 'x-list-header',
+            html: ' '
+        },
+
+<span id='Ext-dataview-component-SimpleListItem-cfg-dataview'>        /*
+</span>         * @private dataview
+         */
+        dataview: null,
+
+<span id='Ext-dataview-component-SimpleListItem-cfg-record'>        /**
+</span>         * @cfg {Ext.data.Model} record The model instance of this ListTplItem. It is controlled by the List.
+         * @accessor
+         */
+        record: null
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-initialize'>    initialize: function() {
+</span>        this.element.addCls(this.getBaseCls() + '-tpl');
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-applyHeader'>    applyHeader: function(header) {
+</span>        if (header &amp;&amp; !header.isComponent) {
+            header = Ext.factory(header, Ext.Component, this.getHeader());
+        }
+        return header;
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-updateHeader'>    updateHeader: function(header, oldHeader) {
+</span>        if (oldHeader) {
+            oldHeader.destroy();
+        }
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-applyDisclosure'>    applyDisclosure: function(disclosure) {
+</span>        if (disclosure &amp;&amp; !disclosure.isComponent) {
+            disclosure = Ext.factory(disclosure, Ext.Component, this.getDisclosure());
+        }
+        return disclosure;
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-updateDisclosure'>    updateDisclosure: function(disclosure, oldDisclosure) {
+</span>        if (disclosure) {
+            this.element.appendChild(disclosure.renderElement);
+        } else if (oldDisclosure) {
+            oldDisclosure.destroy();
+        }
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-updateRecord'>    updateRecord: function(record) {
+</span>        var me = this,
+            dataview = me.dataview || this.getDataview(),
+            data = record &amp;&amp; dataview.prepareData(record.getData(true), dataview.getStore().indexOf(record), record),
+            disclosure = this.getDisclosure();
+
+        me.updateData(data || null);
+
+        if (disclosure &amp;&amp; record &amp;&amp; dataview.getOnItemDisclosure()) {
+            var disclosureProperty = dataview.getDisclosureProperty();
+            disclosure[(data.hasOwnProperty(disclosureProperty) &amp;&amp; data[disclosureProperty] === false) ? 'hide' : 'show']();
+        }
+    },
+
+<span id='Ext-dataview-component-SimpleListItem-method-destroy'>    destroy: function() {
+</span>        Ext.destroy(this.getHeader(), this.getDisclosure());
+        this.callParent(arguments);
+    }
+});
+</pre>
+</body>
+</html>

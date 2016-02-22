@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-UserSettingsModel'>/**
+</span> * ## Overview
+ * PointInTime.model.UserSettingsModel is a Sencha data model (a set of fields and data).  The user settings model is used to define the fields and data associated with a users settings, this model is used to store information about the user, their user_id, name, email address, etc.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.UserSettingsModel#fields}
+ */
+Ext.define('PointInTime.model.UserSettingsModel', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-UserSettingsModel-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-UserSettingsModel-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier Identifer Object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-UserSettingsModel-cfg-fields'>        /**
+</span>         * @cfg {Object} fields Model Data Fields
+         * Model config object
+         */
+        fields: [
+<span id='PointInTime-model-UserSettingsModel-property-user_id'>            /**
+</span>             * @property {string} user_id User ID
+             */
+            {
+               name: 'user_id',
+               type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-firstname'>            /**
+</span>             * @property {string} firstname First Name
+             */
+            {
+               name: 'firstname',
+               type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-lastname'>            /**
+</span>             * @property {string} lastname Last Name
+             */
+            {
+                name: 'lastname',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-email_address'>            /**
+</span>             * @property {string} email_address Email Address
+             */
+            {
+                name: 'email_address',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-current_password'>            /**
+</span>             * @property {string} current_password Current Password
+             */
+            {
+                name: 'current_password',
+                type: 'password'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-password'>            /**
+</span>             * @property {string} password New Password
+             */
+            {
+                name: 'password',
+                type: 'password'
+            },
+<span id='PointInTime-model-UserSettingsModel-property-phonenumber'>            /**
+</span>             * @property {string} phonenumber Telephone Number US
+             */
+            {
+                name: 'phonenumber',
+                type: 'string'
+            }
+        ]
+    }
+});</pre>
+</body>
+</html>

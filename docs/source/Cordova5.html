@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-compass-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.compass.Cordova', {
+    alternateClassName: 'Ext.device.compass.PhoneGap',
+    extend: 'Ext.device.compass.Abstract',
+<span id='Ext-device-compass-Cordova-property-activeWatchID'>    activeWatchID: null,
+</span><span id='Ext-device-compass-Cordova-method-getHeadingAvailable'>    getHeadingAvailable:function(config) {
+</span>        var callback = function(result) {
+            if(result.hasOwnProperty(&quot;code&quot;)) {
+                config.callback.call(config.scope || this, false);
+            } else{
+                config.callback.call(config.scope || this, true);
+            }
+        };
+
+        this.getCurrentHeading({success: callback, failure: callback});
+    },
+<span id='Ext-device-compass-Cordova-method-getCurrentHeading'>    getCurrentHeading: function(config) {
+</span>        config = this.callParent(arguments);
+        navigator.compass.getCurrentHeading(config.success, config.failure);
+        return config;
+    },
+
+<span id='Ext-device-compass-Cordova-method-watchHeading'>    watchHeading: function(config) {
+</span>        config = this.callParent(arguments);
+        if (this.activeWatchID) {
+            this.clearWatch();
+        }
+        this.activeWatchID = navigator.compass.watchHeading(config.callback, config.failure, config);
+        return config;
+    },
+
+<span id='Ext-device-compass-Cordova-method-clearWatch'>    clearWatch: function() {
+</span>        if (this.activeWatchID) {
+            navigator.compass.clearWatch(this.activeWatchID);
+            this.activeWatchID = null;
+        }
+    }
+});
+</pre>
+</body>
+</html>

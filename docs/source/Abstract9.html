@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-filesystem-Abstract'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.filesystem.Abstract', {
+    config: {
+<span id='Ext-device-filesystem-Abstract-cfg-fileSystemType'>        fileSystemType: 1,
+</span><span id='Ext-device-filesystem-Abstract-cfg-fileSystemSize'>        fileSystemSize: 0,
+</span><span id='Ext-device-filesystem-Abstract-cfg-readerType'>        readerType: &quot;text&quot;,
+</span><span id='Ext-device-filesystem-Abstract-cfg-stringEncoding'>        stringEncoding: &quot;UTF8&quot;
+</span>    },
+
+<span id='Ext-device-filesystem-Abstract-method-requestFileSystem'>    requestFileSystem: function(config) {
+</span>        var defaultConfig = Ext.device.filesystem.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            type: defaultConfig.fileSystemType,
+            size: defaultConfig.fileSystemSize,
+            success: Ext.emptyFn,
+            failure: Ext.emptyFn
+        });
+
+        return config;
+    }
+});</pre>
+</body>
+</html>

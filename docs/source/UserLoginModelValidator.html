@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-UserLoginModelValidator'>/**
+</span> * ## Overview
+ * PointInTime.model.UserLoginModelValidator is a Sencha data model (a set of fields and data).  The user login model validator model is used to define the fields and data associated with user login, user login stores email address and password, and validates both email address and password for presence and formatting.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.UserLoginModelValidator#fields}
+ */
+Ext.define('PointInTime.model.UserLoginModelValidator', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-UserLoginModelValidator-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-UserLoginModelValidator-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier Identifer Object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-UserLoginModelValidator-cfg-fields'>        /**
+</span>         * @cfg {Object} fields Model Data Fields
+         * Model config object
+         */
+        fields:[
+<span id='PointInTime-model-UserLoginModelValidator-property-email'>            /**
+</span>             * @property {Boolean} email Email Address
+             * @type {String}
+             */
+            {name: 'email', type: 'string'},
+<span id='PointInTime-model-UserLoginModelValidator-property-password'>            /**
+</span>             * @property {Boolean} password Password
+             * @type {String}
+             */
+            {name: 'password', type: 'string'}
+        ],
+<span id='PointInTime-model-UserLoginModelValidator-cfg-validations'>        /**
+</span>         * @cfg {Object} validations Model Data Validators
+         * Model data validators
+         */
+        validations:[
+<span id=''>            /**
+</span>             * Email address must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'email',
+</span><span id='-property-message'>                message: &quot;Email Missing&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Password must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'password',
+</span><span id='-property-message'>                message: &quot;Password Missing&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Email address must match format
+             */
+            {
+<span id='-property-type'>                type: 'format',
+</span><span id='-property-name'>                name: 'email',
+</span><span id='-property-matcher'>                matcher: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+</span><span id='-property-message'>                message: &quot;Invalid Email Address&quot;
+</span>            }
+        ]
+    }
+});</pre>
+</body>
+</html>

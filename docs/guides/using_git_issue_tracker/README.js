@@ -1,0 +1,1 @@
+Ext.data.JsonP.using_git_issue_tracker({"guide":"<h1 id='using_git_issue_tracker-section-using-github-issue-tracker'>Using GITHub Issue Tracker</h1>\n\n<p>See <a href=\"https://guides.github.com/features/issues/\" title=\"GitHub Issues\">https://guides.github.com/features/issues/</a> for information about using the GitHub Issue tracker.</p>\n","title":"Using GIT Issue Tracker"});

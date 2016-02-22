@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-ux-device-Analytics'>/**
+</span> * Allows you to use Google Analytics within your Cordova application.
+ *
+ * For setup information, please read the [plugin documentation](https://github.com/phonegap/phonegap-facebook-plugin).
+ * 
+ * @mixins Ext.ux.device.analytics.Abstract
+ *
+ * For more information regarding Native APIs, please review our [Native APIs guide](../../../packaging/native_apis.html).
+ */
+Ext.define('Ext.ux.device.Analytics', {
+    singleton: true,
+
+    requires: [
+        'Ext.device.Communicator',
+        'Ext.ux.device.analytics.Cordova'
+    ],
+
+<span id='Ext-ux-device-Analytics-method-constructor'>    constructor: function() {
+</span>        var browserEnv = Ext.browser.is;
+        if (browserEnv.WebView &amp;&amp; browserEnv.Cordova) {
+            return Ext.create('Ext.ux.device.analytics.Cordova');
+        } else {
+            return Ext.create('Ext.ux.device.analytics.Abstract');
+        }
+    }
+});
+</pre>
+</body>
+</html>

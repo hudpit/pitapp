@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-view-Location'>/**
+</span> * ## Overview
+ * Location Panel View.
+ *
+ * Sencha Touch uses views for user interaction.  From the user's perspective the application is just a series of views.  [Read more about Sencha Touch Views](http://docs.sencha.com/touch/2.4/components/views.html).  The location view is used to set the location for surveys, it is also used to launch the manual address entry view, it can be used to center location based on GPS or display location service errors.
+ *
+ * Controllers are responsible for responding to events that occur within the app.  The location lookup controller responds to events within this view: {@link PointInTime.controller.LocationLookup}.
+ *
+ * Screen shot of panel view inside application running on IOS8:
+ * {@img shots/set_location.PNG Set Location Panel}
+ */
+Ext.define(&quot;PointInTime.view.Location&quot;, {
+    extend: 'Ext.Panel',
+    xtype: 'locationlookup',
+<span id='PointInTime-view-Location-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * View config object
+     */
+    config: {
+<span id='PointInTime-view-Location-cfg-google_gmap'>        /**
+</span>         * @cfg {Object} google_gmap
+         * Google gMap
+         */
+        google_gmap: undefined,
+<span id='PointInTime-view-Location-cfg-surveytype'>        /**
+</span>         * @cfg {String} surveytype
+         * Survey Type
+         */
+        surveytype: null,
+<span id='PointInTime-view-Location-cfg-surveyid'>        /**
+</span>         * @cfg {String} surveyid
+         * Survey ID
+         */
+        surveyid: null,
+<span id='PointInTime-view-Location-cfg-set_household_id'>        /**
+</span>         * @cfg {String} set_household_id
+         * Household ID
+         */
+        set_household_id: null,
+<span id='PointInTime-view-Location-cfg-set_household_entrynumber'>        /**
+</span>         * @cfg {String} set_household_entrynumber
+         * Household Entry Number x of x
+         */
+        set_household_entrynumber: null,
+<span id='PointInTime-view-Location-cfg-set_number_in_household'>        /**
+</span>         * @cfg {String} set_number_in_household
+         * Household Total Number in Household
+         */
+        set_number_in_household: null,
+<span id='PointInTime-view-Location-cfg-gmapcenter'>        /**
+</span>         * @cfg {Object} gmapcenter
+         * Google Maps Lat Lng for center position
+         */
+        gmapcenter: undefined,
+<span id='PointInTime-view-Location-cfg-map_center'>        /**
+</span>         * @cfg {Object} map_center
+         * Object with Lat Lng for center position, used for saved centers
+         */
+        map_center: null,
+<span id='PointInTime-view-Location-cfg-manualaddress'>        /**
+</span>         * @cfg {String} manualaddress
+         * String of manual address for google maps geocode lookup
+         */
+        manualaddress: null,
+<span id='PointInTime-view-Location-cfg-title'>        /**
+</span>         * @cfg {String} title
+         * String of panel title
+         */
+        title: 'Set Location',
+<span id='PointInTime-view-Location-cfg-iconCls'>        /**
+</span>         * @cfg {String} iconCls
+         * String of icon Class
+         */
+        iconCls: 'locate',
+<span id='PointInTime-view-Location-cfg-layout'>        /**
+</span>         * @cfg {String} layout
+         * String for panel layout type
+         */
+        layout: 'vbox',
+<span id='PointInTime-view-Location-cfg-items'>        /**
+</span>         * @cfg {Object} items
+         * Panel items
+         */
+        items: [
+            {
+                xtype: 'toolbar',
+                docked: 'bottom',
+                items: [
+                    {
+                        iconCls: 'help',
+                        action: 'openHelpWindow'
+                    },
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        text: 'Enter Address',
+                        action: 'changelocation'
+                    },
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        itemId: 'mapcenterbutton',
+                        action: 'map_geolocate',
+                        iconCls: 'locate',
+                        hidden: false
+                    },
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        iconCls: 'xlogouticon',
+                        action: 'logoutuser',
+                        itemId: 'logoutbutton',
+                        hidden: false
+                    }
+                ]
+            },
+            {
+                xtype: 'panel',
+                itemId: 'mapHolder',
+                masked: true,
+                style: 'padding:10px;',
+                layout: 'fit',
+                flex: 5
+            },
+            {
+                xtype: 'panel',
+                flex: 2,
+                layout: 'vbox',
+                padding: '10px',
+                items: [
+                    {
+                        itemId: 'confirmnextbutton',
+                        xtype: 'button',
+                        ui: 'confirm',
+                        text: 'Next',
+                        action: 'confirmlocation',
+                        flex: 3
+                    }
+                ]
+            }
+        ],
+<span id='PointInTime-view-Location-cfg-listeners'>        listeners: {
+</span>            initialize: function() {
+                this.fireEvent('onInitLocationView', this);
+            },
+            painted: function(el) {
+                this.down('#confirmnextbutton').setDisabled(false);
+            }
+        }
+    },
+
+<span id='PointInTime-view-Location-method-initialize'>    /**
+</span>     * initialize Function
+     * This method is called automatically.
+     */
+    initialize: function() {
+        var me = this;
+
+        if (Ext.Viewport.getOrientation() === 'landscape') {
+            me.down('#confirmnextbutton').setFlex(4);
+        }
+
+        if (!navigator.onLine) {
+            me.down('[action=logoutuser]').setHidden(true);
+        }
+
+        this.callParent(arguments);
+    }
+});</pre>
+</body>
+</html>

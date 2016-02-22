@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-event-Touch'>/**
+</span> * @private
+ * Touch event.
+ */
+Ext.define('Ext.event.Touch', {
+    extend: 'Ext.event.Dom',
+
+    requires: [
+        'Ext.util.Point'
+    ],
+
+<span id='Ext-event-Touch-method-constructor'>    constructor: function(event, info, map, list) {
+</span>        var touches = [],
+            touch, i, ln, identifier;
+
+        if (info) {
+            this.set(info);
+        }
+
+        this.changedTouches = this.cloneTouches(event.changedTouches, map);
+
+        for (i = 0, ln = list.length; i &lt; ln; i++) {
+            identifier = list[i];
+            touches.push(map[identifier]);
+        }
+
+        this.touches = touches;
+        this.targetTouches = touches.slice();
+
+        touch = this.changedTouches[0];
+
+        this.callSuper([event]);
+
+        this.target = this.delegatedTarget = touch.target;
+        this.pageX = touch.pageX;
+        this.pageY = touch.pageY;
+    },
+
+<span id='Ext-event-Touch-method-cloneTouches'>    cloneTouches: function(touches, map) {
+</span>        var clonedTouches = [],
+            i, ln, touch, identifier;
+
+        for (i = 0,ln = touches.length; i &lt; ln; i++) {
+            touch = touches[i];
+            identifier = touch.identifier;
+            clonedTouches[i] = map[identifier];
+        }
+
+        return clonedTouches;
+    }
+});
+</pre>
+</body>
+</html>

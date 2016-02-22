@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-view-PITDrafts'>/**
+</span> * ## Overview
+ * Draft Panel View.
+ *
+ * Sencha Touch uses views for user interaction.  From the user's perspective the application is just a series of views.  [Read more about Sencha Touch Views](http://docs.sencha.com/touch/2.4/components/views.html).   The PIT drafts panel is used to list saved drafts.
+ *
+ * Controllers are responsible for responding to events that occur within the app.  The main controller responds to events within this view: {@link PointInTime.controller.Main}.
+ *
+ * Screen shot of panel view inside application running on IOS8:
+ * {@img shots/drafts.PNG PIT Drafts Panel}
+ */
+Ext.define(&quot;PointInTime.view.PITDrafts&quot;, {
+    extend: 'Ext.Container',
+    alias: 'widget.pitDrafts',
+    xtype: 'pitdrafts',
+<span id='PointInTime-view-PITDrafts-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * View config object
+     */
+    config : {
+<span id='PointInTime-view-PITDrafts-cfg-fullscreen'>        /**
+</span>         * @cfg {Boolean} fullscreen
+         * True or False, Panel Full screen
+         */
+        fullscreen: true,
+<span id='PointInTime-view-PITDrafts-cfg-layout'>        /**
+</span>         * @cfg {Boolean} layout
+         * Panel Layout
+         */
+        layout: 'card',
+<span id='PointInTime-view-PITDrafts-cfg-items'>        /**
+</span>         * @cfg {Object} items
+         * Panel Items
+         */
+        items: [
+            {
+                xtype: 'list',
+                itemId: 'PITDraftList',
+                store: 'PITEntryDrafts',
+                plugins: {
+                    xclass: 'Ext.plugin.SlideToRemove',
+                    buttonWidth: '40%',
+                    removeText: 'Remove'
+                },
+                emptyText: '&lt;div style=&quot;padding:5px;&quot;&gt;Currently there are no drafts,&lt;br/&gt;create a new draft by selecting the &lt;br/&gt;\' New Survey \' tab in the top left.&lt;/div&gt;',
+                title: 'Draft Surveys',
+                itemTpl: '&lt;div class=&quot;myContent&quot;&gt;' +
+                        '&lt;div&gt;Survey Type: &lt;b&gt;{surveytype}&lt;/b&gt;&lt;/div&gt;' +
+                        '&lt;div class=&quot;c&quot;&gt;&lt;b&gt;{created_datetime:date(&quot;F j, Y, g:i a&quot;)}&lt;/b&gt;&lt;/div&gt;' +
+                        '&lt;div&gt;ID: &lt;b&gt;{draftid}&lt;/b&gt;&lt;/div&gt;' +
+                        '&lt;tpl if=&quot;values.householdid&quot;&gt;' +
+                        '&lt;div&gt;Household: &lt;b&gt;{householdid} {household_entry_number}/{number_in_household}&lt;/b&gt;&lt;/div&gt;' +
+                        '&lt;/tpl&gt;' +
+                        '&lt;tpl if=&quot;values.location&quot;&gt;' +
+                        '&lt;div&gt;{location}&lt;/div&gt;' +
+                        '&lt;/tpl&gt;'
+            },
+            {
+                xtype: 'toolbar',
+                docked: 'bottom',
+                items: [
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        xtype: 'button',
+                        iconCls: 'xlogouticon',
+                        action: 'logoutuser',
+                        itemId: 'logoutbutton',
+                        text: 'Logout'
+                    }
+                ]
+            }
+        ]
+    },
+
+<span id='PointInTime-view-PITDrafts-method-initialize'>    /**
+</span>     * initialize Function
+     * This method is called automatically.
+     */
+    initialize: function() {
+
+        if (!navigator.onLine) {
+            this.down('[action=logoutuser]').setHidden(true);
+        }
+        this.callParent();
+    }
+});</pre>
+</body>
+</html>

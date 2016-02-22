@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-accelerometer-Abstract'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.accelerometer.Abstract', {
+    config: {
+<span id='Ext-device-accelerometer-Abstract-cfg-frequency'>        /**
+</span>         * @cfg {Number} frequency The default frequency to get the current acceleration when using {@link Ext.device.Accelerometer#watchAcceleration}.
+         */
+        frequency: 10000
+    },
+
+<span id='Ext-device-accelerometer-Abstract-method-getCurrentAcceleration'>    getCurrentAcceleration: function(config) {
+</span>        // &lt;debug&gt;
+        if (!config.success) {
+            Ext.Logger.warn('You need to specify a `success` function for #getCurrentAcceleration');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+
+<span id='Ext-device-accelerometer-Abstract-method-watchAcceleration'>    watchAcceleration: function(config) {
+</span>        var defaultConfig = Ext.device.accelerometer.Abstract.prototype.config;
+
+        config = Ext.applyIf(config, {
+            frequency: defaultConfig.frequency
+        });
+
+        // &lt;debug&gt;
+        if (!config.callback) {
+            Ext.Logger.warn('You need to specify a `callback` function for #watchAcceleration');
+        }
+        // &lt;/debug&gt;
+
+        return config;
+    },
+
+<span id='Ext-device-accelerometer-Abstract-method-clearWatch'>    clearWatch: Ext.emptyFn
+</span>});
+</pre>
+</body>
+</html>

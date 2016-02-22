@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-Project'>/**
+</span> * ## Overview
+ * PointInTime.model.Project is a Sencha data model (a set of fields and data).  The project model is used to save information about the users chosen project, the project manager is used to search for project keys {@link PointInTime.view.ProjectManager}.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.Project#fields}
+ */
+Ext.define('PointInTime.model.Project', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-Project-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-Project-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier Identifer Object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-Project-cfg-fields'>        /**
+</span>         * @cfg {Object} fields Model Data Fields
+         * Model config object
+         */
+        fields: [
+            {name: 'project_id', type: 'int'},
+            {name: 'project_title', type: 'string'},
+            {name: 'setup_key', type: 'string' },
+            {name: 'datastore_url', type: 'string'}
+        ]
+    }
+});
+</pre>
+</body>
+</html>

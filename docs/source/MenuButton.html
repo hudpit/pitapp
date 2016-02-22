@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-ux-MenuButton'>/**
+</span> * User extention designed to be used on the BB10 platform.
+ *
+ * @private
+ */
+Ext.define('Ext.ux.MenuButton', {
+    extend: 'Ext.Button',
+    requires: ['Ext.ux.ContextMenu'],
+
+    config: {
+<span id='Ext-ux-MenuButton-cfg-ui'>        /**
+</span>         * @hide
+         */
+        ui: 'tab',
+
+<span id='Ext-ux-MenuButton-cfg-cls'>        /**
+</span>         * @hide
+         */
+        cls: 'menu',
+
+<span id='Ext-ux-MenuButton-cfg-menuConfig'>        menuConfig: {},
+</span>
+<span id='Ext-ux-MenuButton-cfg-menuItems'>        menuItems: [],
+</span>
+<span id='Ext-ux-MenuButton-cfg-menuSide'>        /**
+</span>         * @hide
+         */
+        menuSide: 'right',
+
+<span id='Ext-ux-MenuButton-cfg-menuCover'>        /**
+</span>         * @hide
+         */
+        menuCover: false,
+
+<span id='Ext-ux-MenuButton-cfg-menuCls'>        /**
+</span>         * @hide
+         */
+        menuCls: null,
+
+<span id='Ext-ux-MenuButton-cfg-listeners'>        /**
+</span>         * @hide
+         */
+        listeners: {
+            tap: 'onTap'
+        }
+    },
+
+<span id='Ext-ux-MenuButton-method-onTap'>    /**
+</span>     * @private
+     * Used to show the menu associated with this button
+     */
+    onTap: function(e) {
+        if (this.$menu) {
+            this.$menu.destroy();
+        }
+
+        this.element.addCls('x-open');
+
+        this.$menu = Ext.create('Ext.ux.ContextMenu', Ext.apply({}, this.getMenuConfig(), {
+            cls: this.getMenuCls(),
+            items: this.getMenuItems(),
+            listeners: {
+                scope: this,
+                hide: function() {
+                    if (this.$menu) {
+                        this.element.removeCls('x-open');
+                        Ext.Viewport.removeMenu(this.getMenuSide());
+                        this.$menu.destroy();
+                    }
+                }
+            }
+        }));
+
+        this.$menu.on({
+            scope: this,
+            tap: this.onMenuButtonTap,
+            delegate: 'button'
+        });
+
+        Ext.Viewport.setMenu(this.$menu, {
+            side: this.getMenuSide(),
+            cover: this.getMenuCover()
+        });
+
+        Ext.Viewport.showMenu(this.getMenuSide());
+    },
+
+<span id='Ext-ux-MenuButton-method-onMenuButtonTap'>    onMenuButtonTap: Ext.emptyFn
+</span>});</pre>
+</body>
+</html>

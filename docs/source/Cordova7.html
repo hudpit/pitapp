@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-contacts-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.device.contacts.Cordova', {
+    alternateClassName: 'Ext.device.contacts.PhoneGap',
+    extend: 'Ext.device.contacts.Abstract',
+
+<span id='Ext-device-contacts-Cordova-method-getContacts'>    getContacts: function (config) {
+</span>        if (!config) {
+            Ext.Logger.warn('Ext.device.Contacts#getContacts: You must specify a `config` object.');
+            return false;
+        }
+
+        if (!config.success) {
+            Ext.Logger.warn('Ext.device.Contacts#getContacts: You must specify a `success` method.');
+            return false;
+        }
+
+        if (!config.fields) {
+            config.fields = [&quot;*&quot;];
+        }
+
+        if (!Ext.isArray(config.fields)) {
+            config.fields = [config.fields];
+        }
+
+        if (Ext.isEmpty(config.multiple)) {
+            config.multiple = true;
+        }
+
+        navigator.contacts.find(config.fields, config.success, config.failure, config);
+    }
+});
+</pre>
+</body>
+</html>

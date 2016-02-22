@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Sencha Examples</title>
+
+    <style id="iframe-css" type="text/css"></style>
+    <style type="text/css" media="screen">
+        html {
+            overflow: hidden
+        }
+
+        .home {
+            text-align: center;
+        }
+
+        .home img {
+            width: 64%;
+        }
+
+        .home h1 {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .home p {
+            color: #666;
+            font-size: 0.8em;
+            line-height: 1.5em;
+            margin: 10px 20px 12px 20px;
+        }
+
+        .home h2 {
+            color: #999;
+            font-size: 0.7em;
+        }
+
+        .twitterView .x-dataview-item {
+            padding: 10px;
+            min-height: 50px;
+        }
+
+        .twitterView .x-dataview-item img {
+            float: left;
+            display: block;
+            margin-top: 36px;
+        }
+
+        .twitterView .x-dataview-item h2 {
+            font-weight: bold;
+            color: #333;
+            margin: 0px 0px 10px 60px;
+        }
+
+        .twitterView .x-dataview-item p {
+            color: #666;
+            margin-left: 60px;
+            font-size: 0.8em;
+        }
+
+        /*used in the dataview guide*/
+        .my-dataview-item {
+            background: #ddd;
+            padding: 1em;
+            border-bottom: 1px solid #ccc;
+        }
+        .my-dataview-item img {
+            float: left;
+            margin-right: 1em;
+        }
+        .my-dataview-item h2 {
+            font-weight: bold;
+        }
+
+        .no-webkit { text-align: center; }
+        .no-webkit h1 { font-weight: bold; margin: 1em; color: #66ab16; }
+        .no-webkit p { margin: 1em; color: #484848; }
+    </style>
+
+    <script type="text/javascript">
+        function loadInlineExample(code, options, callback) {
+            try {
+                document.body.innerHTML = '';
+                
+                // Show error-message to non-WebKit browsers
+                if (!/webkit/i.test(navigator.userAgent)) {
+                    document.body.innerHTML = [
+                        "<div class='no-webkit'>",
+                        "<h1>Sencha Touch only functions on WebKit based browsers.</h1>",
+                        "<p>Please use Google Chrome or Safari to see live examples.</p>",
+                        "</div>"
+                    ].join("");
+                    callback && callback(false, "Non-WebKit browser.");
+                    return;
+                }
+
+                /**
+                 * if the passed options array contains a theme option, 
+                 * we look for other options in the options array that match known theme file names.
+                 * if a theme match is found, that theme stylesheet gets loaded into the iframe,
+                 * otherwise we just load the default theme stylesheet
+                 */
+
+                if (!window.Ext) { window.Ext   =   {}; }
+
+                var i       =   0,
+                    theme   =   'Default',
+                    name    =   'sencha-touch',
+                    sets    =   ['android','apple','base',['bb6','Blackberry'],['bb10','Blackberry'],'default','sencha-touch',['wp','Windows']],
+                    len     =   sets.length, 
+                    head, css, iconCss, fw, set;
+
+                if (options && options.theme) {
+                    for (; i < len; i++) {
+                        set =   sets[i];
+                        if (set) {
+                            if (typeof set == 'object') {
+                                if (options[set[0]]) {
+                                    name    =   set[0],
+                                    theme   =   set[1];
+                                }
+                            } else if (options[set]) {
+                                name    =   set;
+                            }
+                        }
+                    } 
+                }
+
+                Ext.theme = {
+                    name: theme
+                };
+
+                css     =   document.createElement('link');
+
+                css.setAttribute('rel',     'stylesheet');
+                css.setAttribute('type',    'text/css');
+                css.setAttribute('href',    'touch-build/resources/css/'+ name + '.css');
+
+                if (name && name == 'bb10') {
+                    iconCss =   document.createElement('link');
+
+                    iconCss.setAttribute('rel',     'stylesheet');
+                    iconCss.setAttribute('type',    'text/css');
+                    iconCss.setAttribute('href',    'touch-build/examples/blackberry/resources/css/app.css');
+                }
+
+                fw      =   document.createElement('script');
+
+                fw.setAttribute('type',     'text/javascript');
+                fw.setAttribute('src',      'touch-build/sencha-touch-all.js');
+
+                head    =   document.getElementsByTagName('head')[0];
+
+                fw.onload = function() {
+                    if (!options.raw) {
+                        code = "Ext.setup({onReady: function(){" + code + "}});";
+                    }
+                    if (options.tablet) {
+                        // Scale example down to 70% size. Default font-size is 114%
+                        Ext.get('iframe-css').update("body {font-size: 79.8% !important}");
+                    }
+                    eval(code);
+                    callback && callback(true);
+                }
+
+                head.appendChild(css);
+                if (iconCss) head.appendChild(iconCss);
+                head.appendChild(fw);
+            } catch (e) {
+                document.body.innerHTML = e;
+                callback && callback(false, e);
+            }
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

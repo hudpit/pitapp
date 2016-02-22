@@ -1,0 +1,46 @@
+// The following two lines import the default Sencha Touch theme. If you are building
+// a new theme, remove them and the add your own CSS on top of the base CSS (which
+// is already included in your app.json file).
+
+
+
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+
+// Custom code goes here..
+
+@include icon('help','?');
+@include icon('mail');
+@include font-face('logouticon', inline-font-files('logouticon.woff', woff, 'logouticon.ttf', truetype, 'logouticon.svg', svg));
+@include icon('xlogouticon', '\e600', 'logouticon');
+
+@include sencha-button-ui('orange',#ff8000,'glossy');
+
+// patch for ugly loadmask in ST 2.3
+.x-mask {
+	.x-mask-inner {
+		background: rgba(black, .4);
+		@include border-radius(.5em);
+	}
+
+	.x-mask-message {
+		bottom: 1em;
+		color: white;
+	}
+
+	&.x-has-message {
+		.x-loading-spinner-outer {
+			height: 6em;
+		}
+	}
+}
+
+.x-list .x-list-item-remove {
+	margin: 4px;
+	z-index: 25;
+	-webkit-box-shadow: -15px 0px 15px -2px white;
+	&.x-button-plain {
+		color:#FF0000;
+	}
+}
+

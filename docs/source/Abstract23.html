@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-scroll-indicator-Abstract'>/**
+</span> * @private
+ */
+Ext.define('Ext.scroll.indicator.Abstract', {
+    extend: 'Ext.Component',
+
+    requires: [
+        'Ext.TaskQueue'
+    ],
+
+    config: {
+<span id='Ext-scroll-indicator-Abstract-cfg-baseCls'>        baseCls: 'x-scroll-indicator',
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-axis'>        axis: 'x',
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-value'>        value: null,
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-length'>        length: null,
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-minLength'>        minLength: 6,
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-hidden'>        hidden: true,
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-ui'>        ui: 'dark',
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-autoHide'>        /**
+</span>         * @cfg {Boolean} [autoHide=true] Set to `false` to always show the indicator for this axis.
+         */
+        autoHide : true
+    },
+
+    cachedConfig: {
+<span id='Ext-scroll-indicator-Abstract-cfg-ratio'>        ratio: 1,
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-barCls'>        barCls: 'x-scroll-bar',
+</span>
+<span id='Ext-scroll-indicator-Abstract-cfg-active'>        active: true
+</span>    },
+
+<span id='Ext-scroll-indicator-Abstract-property-barElement'>    barElement: null,
+</span>
+<span id='Ext-scroll-indicator-Abstract-property-barLength'>    barLength: 0,
+</span>
+<span id='Ext-scroll-indicator-Abstract-property-gapLength'>    gapLength: 0,
+</span>
+<span id='Ext-scroll-indicator-Abstract-method-getElementConfig'>    getElementConfig: function() {
+</span>        return {
+            reference: 'barElement',
+            children: [this.callParent()]
+        };
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-applyRatio'>    applyRatio: function(ratio) {
+</span>        if (isNaN(ratio) || ratio &gt; 1) {
+            ratio = 1;
+        }
+
+        return ratio;
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-refresh'>    refresh: function() {
+</span>        var bar = this.barElement,
+            barDom = bar.dom,
+            ratio = this.getRatio(),
+            axis = this.getAxis(),
+            barLength = (axis === 'x') ? barDom.offsetWidth : barDom.offsetHeight,
+            length = barLength * ratio;
+
+        this.barLength = barLength;
+
+        this.gapLength = barLength - length;
+
+        this.setLength(length);
+
+        this.updateValue(this.getValue());
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-updateBarCls'>    updateBarCls: function(barCls) {
+</span>        this.barElement.addCls(barCls);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-updateAxis'>    updateAxis: function(axis) {
+</span>        this.element.addCls(this.getBaseCls(), null, axis);
+        this.barElement.addCls(this.getBarCls(), null, axis);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-updateValue'>    updateValue: function(value) {
+</span>        var barLength = this.barLength,
+            gapLength = this.gapLength,
+            length = this.getLength(),
+            newLength, offset, extra;
+
+        if (value &lt;= 0) {
+            offset = 0;
+            this.updateLength(this.applyLength(length + value * barLength));
+        }
+        else if (value &gt;= 1) {
+            extra = Math.round((value - 1) * barLength);
+            newLength = this.applyLength(length - extra);
+            extra = length - newLength;
+            this.updateLength(newLength);
+            offset = gapLength + extra;
+        }
+        else {
+            offset = gapLength * value;
+        }
+
+        this.setOffset(offset);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-updateActive'>    updateActive: function(active) {
+</span>        this.barElement[active ? 'addCls' : 'removeCls']('active');
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-doSetHidden'>    doSetHidden: function(hidden) {
+</span>        var me = this;
+
+        if (hidden) {
+            me.getAutoHide() &amp;&amp; me.setOffset(-10000);
+        } else {
+            delete me.lastLength;
+            delete me.lastOffset;
+            me.updateValue(me.getValue());
+        }
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-applyLength'>    applyLength: function(length) {
+</span>        return Math.max(this.getMinLength(), length);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-updateLength'>    updateLength: function(length) {
+</span>        length = Math.round(length);
+        if (this.lastLength === length) {
+            return;
+        }
+        this.lastLength = length;
+        Ext.TaskQueue.requestWrite('doUpdateLength', this, [length]);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-doUpdateLength'>    doUpdateLength: function(length){
+</span>        if (!this.isDestroyed) {
+            var axis = this.getAxis(),
+                element = this.element;
+
+            if (axis === 'x') {
+                element.setWidth(length);
+            }
+            else {
+                element.setHeight(length);
+            }
+        }
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-setOffset'>    setOffset: function(offset) {
+</span>        offset = Math.round(offset);
+        if (this.lastOffset === offset || this.lastOffset === -10000) {
+            return;
+        }
+        this.lastOffset = offset;
+        Ext.TaskQueue.requestWrite('doSetOffset', this,[offset]);
+    },
+
+<span id='Ext-scroll-indicator-Abstract-method-doSetOffset'>    doSetOffset: function(offset) {
+</span>        if (!this.isDestroyed) {
+            var axis = this.getAxis(),
+                element = this.element;
+
+            if (axis === 'x') {
+                element.translate(offset, 0);
+            }
+            else {
+                element.translate(0, offset);
+            }
+        }
+    }
+});
+</pre>
+</body>
+</html>

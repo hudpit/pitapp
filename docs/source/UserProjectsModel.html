@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-UserProjectsModel'>/**
+</span> * ## Overview
+ * PointInTime.model.UserProjectsModel is a Sencha data model (a set of fields and data).  The user projects model is used to define the fields and data associated with a users projects, the user picks a project on first login/setup using a setup key, the information about that project is stored and defined in this model.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.UserProjectsModel#fields}
+ */
+Ext.define('PointInTime.model.UserProjectsModel', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-UserProjectsModel-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-UserProjectsModel-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier Identifer Object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-UserProjectsModel-cfg-fields'>        /**
+</span>         * @cfg {Object} fields Model Data Fields
+         * Model config object
+         */
+        fields: [
+            'user_id',
+            'project_id',
+            'project_title',
+            'setup_key',
+            'datastore_id',
+            'datastore_title',
+            'datastore_url'
+        ]
+    }
+});</pre>
+</body>
+</html>

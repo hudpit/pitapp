@@ -1,0 +1,55 @@
+[
+    {
+        "title": "Guides",
+        "items": [
+            {
+                "name": "accessing_the_code",
+                "url": "guides/accessing_the_code",
+                "title": "Accessing The Code",
+                "description": "This guide shows you how to access the code."
+            },
+            {
+                "name": "development_environment_and_dependencies",
+                "url": "guides/development_environment_and_dependencies",
+                "title": "Development Environment and Dependencies",
+                "description": "This guide shows you Development Environment and Dependencies."
+            },
+            {
+                "name": "recommendations",
+                "url": "guides/recommendations",
+                "title": "Recommendations",
+                "description": "Recommendations."
+            },
+            {
+                "name": "getting_started",
+                "url": "guides/getting_started",
+                "title": "Guidance on getting started with the code",
+                "description": "Guidance on getting started with the code."
+            },
+            {
+                "name": "folder_structure",
+                "url": "guides/folder_structure",
+                "title": "Folder structure",
+                "description": "Overview of folder structure."
+            },
+            {
+                "name": "considerations",
+                "url": "guides/considerations",
+                "title": "Considerations",
+                "description": "Considerations."
+            },
+            {
+                "name": "use_case_scenarios",
+                "url": "guides/use_case_scenarios",
+                "title": "Use Case Scenarios",
+                "description": "Use Case Scenarios."
+            },
+            {
+                "name": "using_git_issue_tracker",
+                "url": "guides/using_git_issue_tracker",
+                "title": "Using GIT Issue Tracker",
+                "description": "Using GIT Issue Tracker."
+            }
+        ]
+    }
+]

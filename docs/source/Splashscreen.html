@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-Splashscreen'>/**
+</span> * Provides access to the native Splashscreen API
+ *
+ * - [PhoneGap](http://docs.phonegap.com/en/2.6.0/cordova_splashscreen_splashscreen.md.html#Splashscreen)
+ *
+ * Class currently only works with Cordova and does not have a simulated HTML counter part.
+ * Please see notes on Cordova Docs for proper Native project code changes that
+ * will need to be made to use this plugin.
+ *
+ * http://docs.phonegap.com/en/2.6.0/cordova_splashscreen_splashscreen.md.html#Splashscreen
+ * 
+ * For more information regarding Native APIs, please review our [Native APIs guide](../../../packaging/native_apis.html).
+ */
+Ext.define('Ext.device.Splashscreen', {
+    singleton: true,
+
+    requires: [
+        'Ext.device.splashscreen.Cordova',
+        'Ext.device.splashscreen.Simulator'
+    ],
+
+<span id='Ext-device-Splashscreen-method-constructor'>    constructor: function() {
+</span>        var browserEnv = Ext.browser.is;
+        if (browserEnv.WebView) {
+            if (browserEnv.Cordova) {
+                return Ext.create('Ext.device.splashscreen.Cordova');
+            }
+        }
+
+        return Ext.create('Ext.device.splashscreen.Simulator');
+    }
+});
+</pre>
+</body>
+</html>

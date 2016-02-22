@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-ProgressIndicator'>/**
+</span> * {@link Ext.ProgressIndicator} provides a progress indicator for file uploads.
+ */
+Ext.define('Ext.ProgressIndicator', {
+    extend: 'Ext.Container',
+
+    mixins: ['Ext.mixin.Progressable'],
+
+    xtype: 'progressindicator',
+
+    config: {
+<span id='Ext-ProgressIndicator-cfg-baseCls'>        baseCls: Ext.baseCSSPrefix + 'progressindicator',
+</span><span id='Ext-ProgressIndicator-cfg-hidden'>        hidden: true,
+</span><span id='Ext-ProgressIndicator-cfg-modal'>        modal: true,
+</span><span id='Ext-ProgressIndicator-cfg-centered'>        centered: true,
+</span>
+<span id='Ext-ProgressIndicator-cfg-loadingText'>        /**
+</span>         * @cfg {String/Ext.XTemplate/Object} loadingText
+         * This template is used when progress is dynamic (many updates will be received). Template will be passed
+         * and object with properties percent and state.
+         *
+         * If a String or XTemplate is given that text will be used for all states of loading. One can optionally pass in an object
+         * with the properties 'upload' and/or 'download' with custom state templates.
+         *
+         *
+         * @accessor
+         */
+        loadingText: {
+            any: 'Loading: {percent}%',
+            upload: 'Uploading: {percent}%',
+            download: 'Downloading: {percent}%'
+        },
+
+<span id='Ext-ProgressIndicator-cfg-fallbackText'>        /**
+</span>         * @cfg {String/Object} fallbackText
+         * This String is used when progress is not dynamic (only start and end events will be received).
+         *
+         * If a String is given that text will be used for all states of loading. One can optionally pass in an object
+         * with the properties 'upload' and/or 'download' with custom state strings.
+         *
+         * @accessor
+         */
+        fallbackText: {
+            any: 'Loading',
+            upload: 'Uploading',
+            download: 'Downloading'
+        },
+
+<span id='Ext-ProgressIndicator-cfg-monitoredStates'>        /**
+</span>         * @cfg {Object} monitoredStates
+         * Object with the properties of 'upload' and 'download'. To disable progress monitoring of any state simply set
+         * it to false. For example:
+         *
+         *  monitoredStates: {
+         *      upload:false
+         *  }
+         *
+         *  @accessor
+         */
+        monitoredStates: {
+            upload: true,
+            download: true
+        },
+
+<span id='Ext-ProgressIndicator-cfg-showAnimation'>        showAnimation: !Ext.browser.is.AndroidStock ? {
+</span>            type: 'slideIn',
+            direction: &quot;left&quot;,
+            duration: 250,
+            easing: 'ease-out'
+        } : null,
+
+<span id='Ext-ProgressIndicator-cfg-hideAnimation'>        hideAnimation: !Ext.browser.is.AndroidStock ? {
+</span>            type: 'slideOut',
+            direction: &quot;left&quot;,
+            duration: 250,
+            easing: 'ease-in'
+        } : null,
+
+<span id='Ext-ProgressIndicator-cfg-minProgressOutput'>        // @private
+</span>        minProgressOutput: 0,
+<span id='Ext-ProgressIndicator-cfg-maxProgressOutput'>        // @private
+</span>        maxProgressOutput: 1,
+<span id='Ext-ProgressIndicator-cfg-state'>        //@private
+</span>        state: null
+    },
+
+<span id='Ext-ProgressIndicator-method-constructor'>    constructor: function() {
+</span>        this.emptyTpl = new Ext.XTemplate(&quot;&quot;);
+        this.callParent(arguments);
+    },
+
+<span id='Ext-ProgressIndicator-method-getElementConfig'>    getElementConfig: function() {
+</span>        return {
+            reference: 'element',
+            classList: ['x-container', 'x-unsized'],
+            children: [
+                {
+                    reference: 'innerElement',
+                    className: Ext.baseCSSPrefix + 'progressindicator-inner',
+                    children: [
+                        {
+                            reference: 'progressBarText',
+                            className: Ext.baseCSSPrefix + 'progressindicator-text'
+                        },
+                        {
+                            reference: 'progressBar',
+                            className: Ext.baseCSSPrefix + 'progressindicator-bar',
+                            children: [
+                                {
+                                    reference: 'progressBarFill',
+                                    className: Ext.baseCSSPrefix + 'progressindicator-bar-fill'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+    },
+
+<span id='Ext-ProgressIndicator-method-onStartProgress'>    onStartProgress: function() {
+</span>        if (!this.getParent()) {
+            Ext.Viewport.add(this);
+        }
+        this.show();
+    },
+
+<span id='Ext-ProgressIndicator-method-onEndProgress'>    onEndProgress: function() {
+</span>        this.hide();
+    },
+
+<span id='Ext-ProgressIndicator-method-onUpdateProgress'>    onUpdateProgress: function() {
+</span>        this.updateBar();
+    },
+
+<span id='Ext-ProgressIndicator-method-getLoadingText'>    getLoadingText: function() {
+</span>        var state = this.getState();
+        if (this._loadingText[state]) {
+            return this._loadingText[state];
+        }
+
+        if (this._loadingText[&quot;any&quot;]) {
+            return this._loadingText[&quot;any&quot;];
+        }
+
+        return this.emptyTpl;
+    },
+
+<span id='Ext-ProgressIndicator-method-applyLoadingText'>    applyLoadingText: function(loadingText) {
+</span>        var tpl = {}, property, value;
+        if (Ext.isString(loadingText)) {
+            tpl = {
+                any: new Ext.XTemplate(loadingText)
+            }
+        } else if (loadingText instanceof Ext.XTemplate) {
+            tpl = {
+                any: loadingText
+            }
+        } else {
+            for (property in loadingText) {
+                value = loadingText[property];
+                tpl[property] = new Ext.XTemplate(value);
+            }
+        }
+        if (!tpl.any) {
+            tpl.any = this.emptyTpl;
+        }
+        return tpl;
+    },
+
+<span id='Ext-ProgressIndicator-method-getFallbackText'>    getFallbackText: function() {
+</span>        var state = this.getState();
+        if (this._fallbackText[state]) {
+            return this._fallbackText[state];
+        }
+
+        if(this._fallbackText[&quot;any&quot;]) {
+            return this._fallbackText[&quot;any&quot;];
+        }
+
+        return &quot;&quot;;
+    },
+
+<span id='Ext-ProgressIndicator-method-applyFallbackText'>    applyFallbackText: function(fallbackText) {
+</span>        var obj = {}, property, value;
+        if (Ext.isString(fallbackText)) {
+            obj = {
+                any: fallbackText
+            }
+        } else {
+            for (property in fallbackText) {
+                value = fallbackText[property];
+                obj[property] = value;
+            }
+        }
+        if (!obj.any) {
+            obj.any = this.emptyTpl;
+        }
+        return obj;
+    },
+
+<span id='Ext-ProgressIndicator-method-updateDynamic'>    updateDynamic: function(value) {
+</span>        if (!value) {
+            this.progressBarText.setHtml(this.getFallbackText());
+            this.progressBar.setWidth(&quot;100%&quot;);
+        } else {
+            this.updateBar();
+        }
+        return value;
+    },
+
+<span id='Ext-ProgressIndicator-method-updateBar'>    updateBar: function() {
+</span>        var state = this.getState();
+        if(this.getMonitoredStates()[state] !== true) {
+            this.progressBarText.setHtml(this.getFallbackText());
+            this.progressBar.setWidth(&quot;100%&quot;);
+            return;
+        }
+
+        var percent = this.getProgress() * 100;
+        if (!Ext.isNumber(percent)) percent = 0;
+        this.progressBar.setWidth(percent + &quot;%&quot;);
+
+        var loadingText = this.getLoadingText();
+        if (loadingText) {
+            this.progressBarText.setHtml(this.getLoadingText().apply({state:state, percent: Math.ceil(percent) || 0}));
+        } else {
+            this.progressBarText.setHtml('');
+        }
+    }
+})
+;
+</pre>
+</body>
+</html>

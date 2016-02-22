@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-UserSettingsModelValidator'>/**
+</span> * ## Overview
+ * PointInTime.model.UserSettingsModelValidator is a Sencha data model (a set of fields and data).  The user settings model validator is used to define the fields associated with a users settings and validate them.  It is not used to store user settings. This model is used to store information about the user, their user_id, name, email address, etc, it has validators to check for the presence of name, password and email addresses, the validators also verifiy the correct format for telephone and email.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.UserSettingsModelValidator#fields}
+ */
+Ext.define('PointInTime.model.UserSettingsModelValidator', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-UserSettingsModelValidator-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-UserSettingsModelValidator-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier
+         * Model config object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-UserSettingsModelValidator-cfg-fields'>        /**
+</span>         * @cfg {Object} fields Model Data Fields
+         * Model config object
+         */
+        fields: [
+<span id='PointInTime-model-UserSettingsModelValidator-property-user_id'>            /**
+</span>             * @property {string} user_id User ID
+             */
+            {
+                name: 'user_id',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModelValidator-property-firstname'>            /**
+</span>             * @property {string} firstname First Name
+             */
+            {
+                name: 'firstname',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModelValidator-property-lastname'>            /**
+</span>             * @property {string} lastname Last Name
+             */
+            {
+                name: 'lastname',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModelValidator-property-email_address'>            /**
+</span>             * @property {string} email_address Email Address
+             */
+            {
+                name: 'email_address',
+                type: 'string'
+            },
+<span id='PointInTime-model-UserSettingsModelValidator-property-password'>            /**
+</span>             * @property {string} password Password
+             */
+            {
+                name: 'password',
+                type: 'password'
+            },
+<span id='PointInTime-model-UserSettingsModelValidator-property-string'>            /**
+</span>             * @property {string} string Phone Number US
+             */
+            {
+                name: 'phonenumber',
+                type: 'string'
+            }
+        ],
+<span id='PointInTime-model-UserSettingsModelValidator-cfg-validations'>        /**
+</span>         * @cfg {Object} validations Model Data Validators
+         * Model data validators
+         */
+        validations : [
+<span id=''>            /**
+</span>             * First Name must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'firstname',
+</span><span id='-property-message'>                message: &quot;First Name&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Last Name must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'lastname',
+</span><span id='-property-message'>                message: &quot;Last Name&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Email must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'email_address',
+</span><span id='-property-message'>                message: &quot;Email&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Password must be present
+             */
+            {
+<span id='-property-type'>                type: 'presence',
+</span><span id='-property-name'>                name: 'password',
+</span><span id='-property-message'>                message: &quot;Password&quot;
+</span>            },
+<span id=''>            /**
+</span>             * Email address must match format
+             */
+            {
+<span id='-property-type'>                type: 'format',
+</span><span id='-property-name'>                name: 'email_address',
+</span><span id='-property-matcher'>                matcher: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+</span><span id='-property-message'>                message: &quot;Email Format&quot;
+</span>            }
+        ]
+    }
+});</pre>
+</body>
+</html>

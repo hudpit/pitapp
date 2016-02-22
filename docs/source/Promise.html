@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-Promise'>/**
+</span> * @private
+ */
+Ext.define('Ext.Promise', {
+    statics: {
+<span id='Ext-Promise-static-method-when'>        when: function() {
+</span>            var ret = new this,
+                promises = Array.prototype.slice.call(arguments),
+                index = -1,
+                results = [],
+                promise;
+
+            function onRejected(e) {
+                ret.reject(e);
+            }
+
+            function onFulfilled(result) {
+                promise = promises.shift();
+
+                if (index &gt;= 0) {
+                    results[index] = result;
+                }
+
+                index++;
+
+                if (promise) {
+                    promise.then(onFulfilled, onRejected);
+                }
+                else {
+                    ret.fulfill.apply(ret, results);
+                }
+            }
+
+            onFulfilled();
+
+            return ret;
+        },
+
+<span id='Ext-Promise-static-method-whenComplete'>        whenComplete: function(promises) {
+</span>            var ret = new this,
+                index = -1,
+                fulfilledResults = [],
+                rejectedReasons = [],
+                promise;
+
+            function onRejected(reason) {
+                promise = promises.shift();
+                rejectedReasons.push(reason);
+                next(promise);
+            }
+
+            function onFulfilled(result) {
+                promise = promises.shift();
+                fulfilledResults.push(result);
+                next(promise);
+            }
+
+            function next(promise) {
+                index++;
+
+                if (promise) {
+                    promise.then(onFulfilled, onRejected);
+                }
+                else {
+                    ret.fulfill.call(ret, {
+                        fulfilled: fulfilledResults,
+                        rejected: rejectedReasons
+                    });
+                }
+            }
+
+            next(promises.shift());
+
+            return ret;
+        },
+
+<span id='Ext-Promise-static-method-from'>        from: function() {
+</span>            var promise = new this;
+            promise.completed = 1;
+            promise.lastResults = arguments;
+            return promise;
+        },
+
+<span id='Ext-Promise-static-method-fail'>        fail: function(reason) {
+</span>            var promise = new this;
+            promise.completed = -1;
+            promise.lastReason = reason;
+            return promise;
+        }
+    },
+
+<span id='Ext-Promise-property-completed'>    completed: 0,
+</span>
+<span id='Ext-Promise-method-getListeners'>    getListeners: function(init) {
+</span>        var listeners = this.listeners;
+
+        if (!listeners &amp;&amp; init) {
+            this.listeners = listeners = [];
+        }
+
+        return listeners;
+    },
+
+<span id='Ext-Promise-method-then'>    then: function(scope, success, error) {
+</span>        if (typeof scope == 'function') {
+            error = success;
+            success = scope;
+            scope = null;
+        }
+
+        if (typeof success == 'string') {
+            success = scope[success];
+        }
+
+        if (typeof error == 'string') {
+            error = scope[error];
+        }
+
+        return this.doThen(scope, success, error);
+    },
+
+<span id='Ext-Promise-method-doThen'>    doThen: function(scope, success, error) {
+</span>        var Promise = Ext.Promise,
+            completed = this.completed,
+            promise, result;
+
+        if (completed === -1) {
+            if (error) {
+                error.call(scope, this.lastReason);
+            }
+            return this;
+        }
+
+        if (completed === 1 &amp;&amp; !this.isFulfilling) {
+            if (!success) {
+                return this;
+            }
+
+            result = success.apply(scope, this.lastResults);
+
+            if (result instanceof Promise) {
+                promise = result;
+            }
+            else {
+                promise = Promise.from(result);
+            }
+        }
+        else {
+            promise = new Promise;
+            promise.$owner = this;
+
+            this.getListeners(true).push({
+                scope: scope,
+                success: success,
+                error: error,
+                promise: promise
+            });
+        }
+
+        return promise;
+    },
+
+<span id='Ext-Promise-method-error'>    error: function(scope, error) {
+</span>        if (typeof scope == 'function') {
+            error = scope;
+            scope = null;
+        }
+
+        if (typeof error == 'string') {
+            error = scope[error];
+        }
+
+        return this.doThen(scope, null, error);
+    },
+
+<span id='Ext-Promise-method-fulfill'>    fulfill: function() {
+</span>        var results = arguments,
+            listeners, listener, scope, success, promise, callbackResults;
+
+        this.lastResults = results;
+        this.completed = 1;
+
+        while (listeners = this.getListeners()) {
+            delete this.listeners;
+            this.isFulfilling = true;
+
+            while (listener = listeners.shift()) {
+                success = listener.success;
+                scope = listener.scope;
+                promise = listener.promise;
+                delete promise.$owner;
+
+                if (success) {
+                    callbackResults = success.apply(scope, results);
+
+                    if (callbackResults instanceof Ext.Promise) {
+                        callbackResults.connect(promise);
+                    }
+                    else {
+                        promise.fulfill(callbackResults);
+                    }
+                }
+                else {
+                    promise.fulfill(results);
+                }
+            }
+
+            this.isFulfilling = false;
+        }
+
+        return this;
+    },
+
+<span id='Ext-Promise-method-connect'>    connect: function(promise) {
+</span>        var me = this;
+
+        me.then(promise, function(result) {
+            this.fulfill(result);
+            return result;
+        }, 'reject');
+    },
+
+<span id='Ext-Promise-method-reject'>    reject: function(reason) {
+</span>        var listeners = this.getListeners(),
+            listener, error, promise;
+
+        this.lastReason = reason;
+        this.completed = -1;
+
+        if (listeners) {
+            delete this.listeners;
+            while (listener = listeners.shift()) {
+                error = listener.error;
+                promise = listener.promise;
+                delete promise.$owner;
+
+                if (error) {
+                    error.call(listener.scope, reason);
+                }
+
+                promise.reject(reason);
+            }
+        }
+
+        return this;
+    },
+
+<span id='Ext-Promise-method-cancel'>    cancel: function() {
+</span>        var listeners = this.getListeners(),
+            owner = this.$owner,
+            i, ln, listener;
+
+        if (listeners) {
+            for (i = 0, ln = listeners.length; i &lt; ln; i++) {
+                listener = listeners[i];
+                listener.promise.cancel();
+            }
+            listeners.length = 0;
+            delete this.listeners;
+        }
+
+        if (owner) {
+            delete this.$owner;
+            owner.cancel();
+        }
+    }
+});
+</pre>
+</body>
+</html>

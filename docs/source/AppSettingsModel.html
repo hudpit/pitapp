@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='PointInTime-model-AppSettingsModel'>/**
+</span> * ## Overview
+ * PointInTime.model.AppSettingsModel is a Sencha data model (a set of fields and data).  The application settings model is used to define the fields and data associated with application initalisation and setup, it also defines information about the users identify and logged in state.  This model is also used to store information pertitant to the survey's project information, like the project title and the datastore URL.  This model is invoked when the user logs in and sets up a project with their assigned project key.
+ *
+ * Fields used in this model:
+ * {@link PointInTime.model.AppSettingsModel#fields}
+ */
+Ext.define('PointInTime.model.AppSettingsModel', {
+    extend: 'Ext.data.Model',
+<span id='PointInTime-model-AppSettingsModel-cfg-config'>    /**
+</span>     * @cfg {Object} config
+     * Model config object
+     */
+    config: {
+<span id='PointInTime-model-AppSettingsModel-cfg-identifier'>        /**
+</span>         * @cfg {Object} identifier Identifer Object
+         */
+        identifier: {type: 'uuid'},
+<span id='PointInTime-model-AppSettingsModel-cfg-fields'>        /**
+</span>         * @cfg {Object} fields
+         * Model config object  
+         * is_initialised (Boolean)
+         */
+        fields: [
+<span id='PointInTime-model-AppSettingsModel-property-is_initialised'>            /**
+</span>             * @property {Boolean} is_initialised Is Application Initialised?
+             */
+            {
+                name: 'is_initialised',
+                type: 'boolean',
+                defaultValue: false
+            },
+<span id='PointInTime-model-AppSettingsModel-property-is_setup'>            /**
+</span>             * @property {Boolean} is_setup Is Application Setup?
+             */
+            {
+                name: 'is_setup',
+                type: 'boolean',
+                defaultValue: false
+            },
+<span id='PointInTime-model-AppSettingsModel-property-is_logged_in'>            /**
+</span>             * @property {Boolean} is_logged_in Is User Logged In?
+             */
+            {
+                name: 'is_logged_in',
+                type: 'boolean',
+                defaultValue: false
+            },
+<span id='PointInTime-model-AppSettingsModel-property-setup_key'>            /**
+</span>             * @property {String} setup_key App Setup Key
+             */
+            {
+                name: 'setup_key',
+                type: 'string'
+            },
+<span id='PointInTime-model-AppSettingsModel-property-user_id'>            /**
+</span>             * @property {String} user_id App User ID
+             */
+            {
+                name: 'user_id',
+                type: 'string'
+            },
+<span id='PointInTime-model-AppSettingsModel-property-project_id'>            /**
+</span>             * @property {String} project_id Project ID
+             */
+            {
+                name: 'project_id',
+                type: 'string'
+            },
+<span id='PointInTime-model-AppSettingsModel-property-project_title'>            /**
+</span>             * @property {String} project_title Project Title
+             */
+            {
+                name: 'project_title',
+                type: 'string'
+            },
+<span id='PointInTime-model-AppSettingsModel-property-datastore_url'>            /**
+</span>             * @property {String} datastore_url Project Datastore URL
+             */
+            {
+                name: 'datastore_url',
+                type: 'string'
+            }
+        ]
+    }
+});</pre>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-viewport-WindowsPhone'>/**
+</span> * @private
+ * Windows Phone version of Viewport.
+ */
+Ext.define('Ext.viewport.WindowsPhone', {
+    requires: [],
+
+    alternateClassName: 'Ext.viewport.WP',
+
+    extend: 'Ext.viewport.Default',
+
+    // so one pixel line is displayed on the right side of the screen. Setting width more than 100% fix the issue
+//    config: {
+//        width: '100.2%',
+//        height: '100.2%'
+//    },
+
+    config: {
+<span id='Ext-viewport-WindowsPhone-cfg-translatable'>        translatable: {
+</span>            translationMethod: 'csstransform'
+        }
+    },
+
+<span id='Ext-viewport-WindowsPhone-method-initialize'>    initialize: function () {
+</span>        // There is -ms-user-select CSS property for IE10, but it seems it works only in desktop browser. So we need to prevent selection event.
+        var preventSelection = function(e) {
+            var srcElement = e.srcElement.nodeName.toUpperCase(),
+                selectableElements = ['INPUT', 'TEXTAREA'];
+
+            if (selectableElements.indexOf(srcElement) == -1) {
+                return false;
+            }
+        };
+
+        document.body.addEventListener('onselectstart', preventSelection);
+
+        this.callParent(arguments);
+    }
+});
+</pre>
+</body>
+</html>

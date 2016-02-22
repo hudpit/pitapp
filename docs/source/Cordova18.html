@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-ux-device-twitter-Cordova'>/**
+</span> * @private
+ */
+Ext.define('Ext.ux.device.twitter.Cordova', {
+<span id='Ext-ux-device-twitter-Cordova-method-compose'>    compose: function(config) {
+</span>    	windows.plugins.twitter.composeTweet(
+			config.success,
+			config.failure,
+			config.tweet,
+			{
+				urlAttach: config.url,
+				imageAttach: config.image
+			}
+		);
+    },
+
+<span id='Ext-ux-device-twitter-Cordova-method-getPublicTimeline'>    getPublicTimeline: function(config) {
+</span>    	window.plugins.twitter.getPublicTimeline(
+    		config.success,
+    		config.failure
+    	);
+    },
+
+<span id='Ext-ux-device-twitter-Cordova-method-getMentions'>    getMentions: function(config) {
+</span>    	window.plugins.twitter.getMentions(
+    		config.success,
+    		config.failure
+    	);
+    },
+    
+<span id='Ext-ux-device-twitter-Cordova-method-getTwitterUsername'>    getTwitterUsername: function(config) {
+</span>    	window.plugins.twitter.getTwitterUsername(
+    		config.success,
+    		config.failure
+    	);
+    },
+
+<span id='Ext-ux-device-twitter-Cordova-method-getTwitterRequest'>    getTwitterRequest: function(config) {
+</span>    	window.plugins.twitter.getTWRequest(
+    		config.url,
+    		config.params,
+    		config.success,
+    		config.failure,
+    		config.options
+    	);
+    }
+});
+</pre>
+</body>
+</html>

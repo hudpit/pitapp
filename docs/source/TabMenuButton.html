@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-ux-TabMenuButton'>/**
+</span> * User extention designed to be used on the BB10 platform.
+ *
+ * This component is used to recreate the Tab Menu component of the BB10 SDK. To recreate a native BB10 experience, it is
+ * advised to insert this component into a {@link Ext.Toolbar} and have it aligned to the left edge.
+ *
+ *     // Used within a toolbar
+ *     {
+ *         xtype: 'toolbar',
+ *         items: [{
+ *             xclass: 'Ext.ux.TabMenuButton',
+ *             text: 'Chats',
+ *             iconCls: 'chats',
+ *             menuItems: [{
+ *                 text: 'Chats',
+ *                 iconCls: 'chats',
+ *                 handler: function() {
+ *                     // do something
+ *                 }
+ *             }, {
+ *                 text: 'Contacts',
+ *                 iconCls: 'contacts',
+ *                 handler: function() {
+ *                     // do something
+ *                 }
+ *             }]
+ *         }]
+ *     }
+ */
+Ext.define('Ext.ux.TabMenuButton', {
+    extend: 'Ext.ux.MenuButton',
+
+    config: {
+<span id='Ext-ux-TabMenuButton-cfg-ui'>        /**
+</span>         * @hide
+         */
+        ui: 'tab',
+
+<span id='Ext-ux-TabMenuButton-cfg-cls'>        /**
+</span>         * @hide
+         */
+        cls: 'tabmenu',
+
+<span id='Ext-ux-TabMenuButton-property-menuItems'>        /**
+</span>         * The items to be used within the {@link Ext.Menu} which is shown when this button is tapped.
+         *
+         *     // Used within a toolbar
+         *     {
+         *         xtype: 'toolbar',
+         *         items: [{
+         *             xclass: 'Ext.ux.TabMenuButton',
+         *             text: 'Chats',
+         *             iconCls: 'chats',
+         *             menuItems: [{
+         *                 text: 'Chats',
+         *                 iconCls: 'chats',
+         *                 handler: function() {
+         *                     // do something
+         *                 }
+         *             }, {
+         *                 text: 'Contacts',
+         *                 iconCls: 'contacts',
+         *                 handler: function() {
+         *                     // do something
+         *                 }
+         *             }]
+         *         }]
+         *     }
+         * 
+         * @type {}
+         */
+        menuItems: [],
+
+<span id='Ext-ux-TabMenuButton-cfg-menuSide'>        /**
+</span>         * @hide
+         */
+        menuSide: 'left'
+    },
+
+<span id='Ext-ux-TabMenuButton-method-onMenuButtonTap'>    onMenuButtonTap: function(button) {
+</span>        if (button &amp;&amp; !Ext.theme.is.Blackberry103) {
+            this.setText(button.getText());
+            this.setIconCls(button.getIconCls());
+        }
+
+        Ext.Viewport.hideMenu(this.getMenuSide());
+    }
+});</pre>
+</body>
+</html>

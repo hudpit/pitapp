@@ -1,0 +1,12 @@
+{
+    "--title": "Point In Time Documentation",
+    "--output": "docs",
+    "--verbose": true,
+    "--ext-namespaces": "Ext,PointInTime",
+    "--": [
+        "touch/src",
+        "app.js",
+        "app"
+    ],
+    "--guides": "guides.json"
+}

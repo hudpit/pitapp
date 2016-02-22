@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-slider-Thumb'>/**
+</span> * @private
+ * Utility class used by Ext.slider.Slider - should never need to be used directly.
+ */
+Ext.define('Ext.slider.Thumb', {
+    extend: 'Ext.Component',
+    xtype : 'thumb',
+
+    config: {
+<span id='Ext-slider-Thumb-cfg-baseCls'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        baseCls: Ext.baseCSSPrefix + 'thumb',
+
+<span id='Ext-slider-Thumb-cfg-pressedCls'>        /**
+</span>         * @cfg {String} pressedCls
+         * The CSS class to add to the Slider when it is pressed.
+         * @accessor
+         */
+        pressedCls: Ext.baseCSSPrefix + 'thumb-pressing',
+
+<span id='Ext-slider-Thumb-cfg-draggable'>        /**
+</span>         * @cfg
+         * @inheritdoc
+         */
+        draggable: {
+            direction: 'horizontal'
+        }
+    },
+
+<span id='Ext-slider-Thumb-property-platformConfig'>    // Strange issue where the thumbs translation value is not being set when it is not visible. Happens when the thumb 
+</span>    // is contained within a modal panel.
+    platformConfig: [
+        {
+            platform: ['ie10'],
+            draggable: {
+                translatable: {
+                    translationMethod: 'csstransform'
+                }
+            }
+        }
+    ],
+
+<span id='Ext-slider-Thumb-property-elementWidth'>    elementWidth: 0,
+</span>
+<span id='Ext-slider-Thumb-method-initialize'>    initialize: function() {
+</span>        this.callParent();
+
+        this.getDraggable().onBefore({
+            dragstart: 'onDragStart',
+            drag: 'onDrag',
+            dragend: 'onDragEnd',
+            scope: this
+        });
+
+        this.getDraggable().on({
+            touchstart: 'onPress',
+            touchend: 'onRelease',
+            scope: this
+        });
+
+        this.element.on('resize', 'onElementResize', this);
+    },
+
+<span id='Ext-slider-Thumb-method-getTemplate'>    getTemplate: function() {
+</span>        if (Ext.theme.is.Blackberry || Ext.theme.is.Blackberry103) {
+            return [
+                {
+                    tag: 'div',
+                    className: Ext.baseCSSPrefix + 'thumb-inner',
+                    reference: 'innerElement'
+                }
+            ]
+        } else {
+            return this.template;
+        }
+    },
+
+
+<span id='Ext-slider-Thumb-method-updatePressedCls'>    /**
+</span>     * @private
+     */
+    updatePressedCls: function(pressedCls, oldPressedCls) {
+        var element = this.element;
+
+        if (element.hasCls(oldPressedCls)) {
+            element.replaceCls(oldPressedCls, pressedCls);
+        }
+    },
+
+<span id='Ext-slider-Thumb-method-onPress'>    // @private
+</span>    onPress: function() {
+        var me = this,
+            element = me.element,
+            pressedCls = me.getPressedCls();
+
+        if (!me.getDisabled()) {
+            element.addCls(pressedCls);
+        }
+    },
+
+<span id='Ext-slider-Thumb-method-onRelease'>    // @private
+</span>    onRelease: function(e) {
+        this.fireAction('release', [this, e], 'doRelease');
+    },
+
+<span id='Ext-slider-Thumb-method-doRelease'>    // @private
+</span>    doRelease: function(me, e) {
+        if (!me.getDisabled()) {
+            me.element.removeCls(me.getPressedCls());
+        }
+    },
+
+<span id='Ext-slider-Thumb-method-onDragStart'>    onDragStart: function() {
+</span>        if (this.isDisabled()) {
+            return false;
+        }
+
+        this.relayEvent(arguments);
+    },
+
+<span id='Ext-slider-Thumb-method-onDrag'>    onDrag: function() {
+</span>        if (this.isDisabled()) {
+            return false;
+        }
+
+        this.relayEvent(arguments);
+    },
+
+<span id='Ext-slider-Thumb-method-onDragEnd'>    onDragEnd: function() {
+</span>        if (this.isDisabled()) {
+            return false;
+        }
+
+        this.relayEvent(arguments);
+    },
+
+<span id='Ext-slider-Thumb-method-onElementResize'>    onElementResize: function(element, info) {
+</span>        this.elementWidth = info.width;
+    },
+
+<span id='Ext-slider-Thumb-method-getElementWidth'>    getElementWidth: function() {
+</span>        return this.elementWidth;
+    }
+});
+</pre>
+</body>
+</html>

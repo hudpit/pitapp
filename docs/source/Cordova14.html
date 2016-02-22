@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-device-push-Cordova'>/**
+</span> * @private
+ * Interfaces with Cordova PushPlugin: https://github.com/phonegap-build/PushPlugin
+ */
+Ext.define('Ext.device.push.Cordova', {
+    extend : 'Ext.device.push.Abstract',
+
+    statics : {
+<span id='Ext-device-push-Cordova-static-property-callbacks'>        /**
+</span>         * @private
+         * A collection of callback methods that can be globally called by the Cordova PushPlugin
+         */
+        callbacks : {}
+    },
+
+<span id='Ext-device-push-Cordova-method-setPushConfig'>    setPushConfig : function (config) {
+</span>        var methodName = Ext.id(null, 'callback');
+
+        //Cordova's PushPlugin needs a static method to call when notifications are received
+        Ext.device.push.Cordova.callbacks[methodName] = config.callbacks.received;
+
+        return {
+            &quot;badge&quot;    : (config.callbacks.type === Ext.device.Push.BADGE) ? &quot;true&quot; : &quot;false&quot;,
+            &quot;sound&quot;    : (config.callbacks.type === Ext.device.Push.SOUND) ? &quot;true&quot; : &quot;false&quot;,
+            &quot;alert&quot;    : (config.callbacks.type === Ext.device.Push.ALERT) ? &quot;true&quot; : &quot;false&quot;,
+            &quot;ecb&quot;      : 'Ext.device.push.Cordova.callbacks.' + methodName,
+            &quot;senderID&quot; : config.senderID
+        };
+    },
+
+<span id='Ext-device-push-Cordova-method-register'>    register : function () {
+</span>        var config = arguments[0];
+
+        config.callbacks = this.callParent(arguments);
+
+        var pushConfig = this.setPushConfig(config),
+            plugin = window.plugins.pushNotification;
+
+        plugin.register(
+            config.callbacks.success,
+            config.callbacks.failure,
+            pushConfig
+        );
+
+    }
+});</pre>
+</body>
+</html>

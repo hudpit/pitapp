@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Ext-plugin-BufferedList'>/**
+</span> * @class Ext.plugin.BufferedList
+ * @extends Ext.plugin.Plugin
+ * Description
+ */
+Ext.define('Ext.plugin.BufferedList', {
+    alias: 'plugin.bufferedlist',
+
+    mixins: [
+        'Ext.mixin.Bindable'
+    ],
+
+    config: {
+<span id='Ext-plugin-BufferedList-cfg-list'>        list: null
+</span>    },
+
+<span id='Ext-plugin-BufferedList-method-init'>    init: function(list) {
+</span>        this.initConfig();
+        this.setList(list);
+    },
+
+<span id='Ext-plugin-BufferedList-method-updateList'>    updateList: function(list) {
+</span>        if (list) {
+            this.bind(list, 'setItemsCount', 'setItemsCount');
+
+            Ext.apply(list, {
+                 updateAllListItems: Ext.Function.bind(this.updateAllListItems, this),
+                 handleItemUpdates: Ext.Function.bind(this.handleItemUpdates, this),
+                 onAnimationIdle: Ext.Function.bind(this.onAnimationIdle, this)
+            });
+
+            list.getStore().on({
+                totalcountchange: 'onTotalCountChange',
+                scope: this
+            });
+        }
+    },
+
+<span id='Ext-plugin-BufferedList-method-onTotalCountChange'>    onTotalCountChange: function(store, storeCount) {
+</span>        var list = this.getList();
+        list.getItemMap().populate(storeCount, list.topRenderedIndex);
+    },
+
+<span id='Ext-plugin-BufferedList-method-setItemsCount'>    setItemsCount: function(count) {
+</span>        var list = this.getList(),
+            store = list.getStore(),
+            buffered = store.buffered;
+
+        if (buffered) {
+            buffered.setViewSize(count);
+        }
+    },
+
+<span id='Ext-plugin-BufferedList-method-updateAllListItems'>    updateAllListItems: function() {
+</span>        var me = this,
+            list = me.getList(),
+            store = list.getStore(),
+            items = list.listItems,
+            info = list.getListItemInfo(),
+            start = list.topRenderedIndex,
+            buffered = store &amp;&amp; store.buffered,
+            viewSize = buffered &amp;&amp; buffered.getViewSize() || 0,
+            end = start + viewSize - 1,
+            i, ln;
+
+        if (buffered) {
+            if (buffered.isRangeCached(start, end)) {
+                for (i = 0, ln = items.length; i &lt; ln; i++) {
+                    list.updateListItem(items[i], start + i, info);
+                }
+
+                if (list.isPainted()) {
+                    list.handleItemHeights();
+                    list.refreshScroller();
+                }
+            } else {
+                buffered.requestRange(start, end, function() {
+                    me.updateAllListItems();
+                });
+            }
+        }
+    },
+
+<span id='Ext-plugin-BufferedList-method-handleItemUpdates'>    handleItemUpdates: function(y) {
+</span>        console.log(y, 'handle item updates');
+    },
+
+<span id='Ext-plugin-BufferedList-method-onAnimationIdle'>    onAnimationIdle: function() {
+</span>        console.log('on animation idle');
+    }
+});</pre>
+</body>
+</html>
